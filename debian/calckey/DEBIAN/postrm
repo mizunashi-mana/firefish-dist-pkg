@@ -1,0 +1,27 @@
+#!/bin/sh
+# postrm script for prometheus
+# Script executed after the package is removed.
+
+set -e
+
+case "$1" in
+  purge)
+        rm -rf \
+            /var/log/prometheus/prometheus.log* \
+            /run/prometheus/prometheus.pid
+	# We do NOT remove the system user.
+	;;
+esac
+
+# Automatically added by dh_installsystemd/*
+if [ "$1" = remove ] && [ -d /run/systemd/system ] ; then
+	systemctl --system daemon-reload >/dev/null || true
+fi
+# End automatically added section
+# Automatically added by dh_installsystemd/*
+if [ "$1" = "purge" ]; then
+	if [ -x "/usr/bin/deb-systemd-helper" ]; then
+		deb-systemd-helper purge 'calckey.service' >/dev/null || true
+	fi
+fi
+# End automatically added section

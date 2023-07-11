@@ -1,0 +1,3 @@
+This package is licensed under the same terms as Calckey i.e. AGPLv3: https://codeberg.org/calckey/calckey/src/branch/develop/LICENSE.
+
+And, this package includes some npm packages and cargo packages depend by Calckey. They are licensed under each terms which included in packages.

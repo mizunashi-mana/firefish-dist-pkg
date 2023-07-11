@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+[ "${TRACE:-false}" = 'true' ] && set -x
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+source "${SCRIPT_DIR}/env.bash"
+
+TARGET_ARCH="${TARGET_ARCH:-"$(dpkg-architecture -qDEB_HOST_ARCH)"}"
+
+apt install -y \
+    rsync
+
+cd "${SOURCE_DIR}"
+
+mkdir -p "${INSTALL_DIR}/calckey/DEBIAN"
+
+CALCKEY_DATADIR="${INSTALL_DIR}/calckey/var/lib/calckey/live"
+mkdir -p "${CALCKEY_DATADIR}"
+rsync --recursive --relative --links \
+    .npmrc \
+    cliff.toml \
+    custom \
+    gulpfile.js \
+    locales \
+    node_modules \
+    package.json \
+    packages \
+    patrons.json \
+    pnpm-lock.yaml \
+    pnpm-workspace.yaml \
+    release.json \
+    rome.json \
+    scripts \
+    title_float.svg \
+    "${CALCKEY_DATADIR}/"
+
+m4 \
+    "-D__ARCH__=${TARGET_ARCH}" \
+    "-D__VERSION__=${PKG_VERSION}" \
+    "${SCRIPT_DIR}/../calckey/DEBIAN/control.m4" \
+    > "${INSTALL_DIR}/calckey/DEBIAN/control"
+
+cd "${INSTALL_DIR}"
+
+# Ubuntu use zstd by default and Debian failed to unpack zstd archive.
+dpkg-deb -Zgzip --build "${INSTALL_DIR}/calckey/" .

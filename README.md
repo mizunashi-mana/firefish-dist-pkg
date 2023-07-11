@@ -1,1 +1,1 @@
-# Debian Calckey
+# Distribution packages of Calckey

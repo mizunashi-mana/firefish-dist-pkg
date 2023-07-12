@@ -20,17 +20,22 @@ set -e
 #     installation fails and the 'postinst' is called with 'abort-upgrade',
 #     'abort-remove' or 'abort-deconfigure'.
 
+USER=calckey
+GROUP="$USER"
+DATADIR=/var/lib/calckey
+CONFFILE="$DATADIR/live/.config/default.yml"
+
 case "$1" in
   configure)
     # Add calckey user
     adduser \
         --quiet \
         --system \
-        --home /var/lib/calckey \
+        --home "$DATADIR" \
         --no-create-home \
         --group \
         --gecos "Calckey daemon" \
-        calckey
+        "$USER"
   ;;
 
   abort-upgrade|abort-remove|abort-deconfigure)
@@ -47,6 +52,11 @@ esac
 if [ "$1" = "configure" ] || [ "$1" = "abort-upgrade" ] || [ "$1" = "abort-deconfigure" ] || [ "$1" = "abort-remove" ] ; then
 	# The following line should be removed in trixie or trixie+1
 	deb-systemd-helper unmask 'calckey.service' >/dev/null || true
+
+	if ! dpkg-statoverride --list "${CONFFILE}" >/dev/null 2>&1
+	then
+		dpkg-statoverride --update --add "${USER}" "${GROUP}" 640 "${CONFFILE}"
+	fi
 
 	# was-enabled defaults to true, so new installations run enable.
 	if deb-systemd-helper --quiet was-enabled 'calckey.service'; then

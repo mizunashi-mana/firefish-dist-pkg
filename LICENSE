@@ -1,3 +1,8 @@
-This package is licensed under the same terms as Calckey i.e. AGPLv3: https://codeberg.org/calckey/calckey/src/branch/develop/LICENSE.
+Apache-2.0 OR MPL-2.0
+---
 
-And, this package includes some npm packages and cargo packages depend by Calckey. They are licensed under each terms which included in packages.
+The default throughout the repository are dual-licensed under the Mozilla Public License 2.0 (at https://mozilla.org/MPL/2.0/) and the Apache License 2.0 (at https://www.apache.org/licenses/LICENSE-2.0), unless the header specifies another license.
+
+The repository provides packages built by the packaging and Calckey sources and including npm packages and cargo packages depended by Calckey. They have own license terms:
+* Calckey is licensed under the AGPLv3: https://codeberg.org/calckey/calckey/src/branch/develop/LICENSE.
+* Dependencies are licensed under each terms which included in packages.  See them.

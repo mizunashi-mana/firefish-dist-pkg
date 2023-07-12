@@ -6,9 +6,7 @@ set -e
 
 case "$1" in
   purge)
-        rm -rf \
-            /var/log/prometheus/prometheus.log* \
-            /run/prometheus/prometheus.pid
+	dpkg-statoverride --remove ${CONFFILE} || test $? -eq 2
 	# We do NOT remove the system user.
 	;;
 esac

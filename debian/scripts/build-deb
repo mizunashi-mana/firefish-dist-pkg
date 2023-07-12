@@ -8,24 +8,21 @@ source "${SCRIPT_DIR}/env.bash"
 
 TARGET_ARCH="${TARGET_ARCH:-"$(dpkg-architecture -qDEB_HOST_ARCH)"}"
 
-apt install -y \
-    rsync
+TEMPLATE_DIR="${WORK_DIR}/calckey"
+
+cp -r "$TEMPLATE_DIR" "${INSTALL_DIR}/calckey"
 
 cd "${SOURCE_DIR}"
 
-mkdir -p "${INSTALL_DIR}/calckey/DEBIAN"
-
 CALCKEY_DATADIR="${INSTALL_DIR}/calckey/var/lib/calckey/live"
 mkdir -p "${CALCKEY_DATADIR}"
-rsync --recursive --relative --links \
+
+mv \
     .npmrc \
     cliff.toml \
     custom \
-    gulpfile.js \
     locales \
-    node_modules \
     package.json \
-    packages \
     patrons.json \
     pnpm-lock.yaml \
     pnpm-workspace.yaml \
@@ -33,12 +30,59 @@ rsync --recursive --relative --links \
     rome.json \
     scripts \
     title_float.svg \
+    built \
+    node_modules \
+    CHANGELOG.md \
+    COPYING \
+    LICENSE \
+    README.md \
+    SECURITY.md \
     "${CALCKEY_DATADIR}/"
+
+mkdir -p "${CALCKEY_DATADIR}/packages/backend"
+mv \
+    packages/backend/package.json \
+    packages/backend/ormconfig.js \
+    packages/backend/assets \
+    packages/backend/built \
+    packages/backend/node_modules \
+    "${CALCKEY_DATADIR}/packages/backend/"
+
+mkdir -p "${CALCKEY_DATADIR}/packages/backend/native-utils"
+mv \
+    packages/backend/native-utils/package.json \
+    packages/backend/native-utils/Cargo.toml \
+    packages/backend/native-utils/Cargo.lock \
+    packages/backend/native-utils/cargo-licenses.html \
+    packages/backend/native-utils/npm \
+    packages/backend/native-utils/built \
+    packages/backend/native-utils/node_modules \
+    "${CALCKEY_DATADIR}/packages/backend/native-utils/"
+
+mkdir -p "${CALCKEY_DATADIR}/packages/calckey-js"
+mv \
+    packages/calckey-js/package.json \
+    packages/calckey-js/LICENSE \
+    packages/calckey-js/built \
+    packages/calckey-js/node_modules \
+    "${CALCKEY_DATADIR}/packages/calckey-js/"
+
+mkdir -p "${CALCKEY_DATADIR}/packages/client"
+mv \
+    packages/client/package.json \
+    packages/client/node_modules \
+    "${CALCKEY_DATADIR}/packages/client/"
+
+mkdir -p "${CALCKEY_DATADIR}/packages/sw"
+mv \
+    packages/sw/package.json \
+    packages/sw/node_modules \
+    "${CALCKEY_DATADIR}/packages/sw/"
 
 m4 \
     "-D__ARCH__=${TARGET_ARCH}" \
     "-D__VERSION__=${PKG_VERSION}" \
-    "${SCRIPT_DIR}/../calckey/DEBIAN/control.m4" \
+    "${WORK_DIR}/control.m4" \
     > "${INSTALL_DIR}/calckey/DEBIAN/control"
 
 cd "${INSTALL_DIR}"

@@ -8,7 +8,7 @@ User=calckey
 WorkingDirectory=/var/lib/calckey/live
 Environment="NODE_ENV=production"
 EnvironmentFile=/etc/default/calckey
-ExecStart=/usr/bin/pnpm run start
+ExecStart=/bin/bash /usr/bin/calckey-starter
 ExecReload=/bin/kill -SIGUSR1 $MAINPID
 TimeoutSec=15
 Restart=on-failure

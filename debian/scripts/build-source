@@ -73,3 +73,7 @@ accepted = [
 ]
 EOS
 (cd packages/backend/native-utils && cargo about generate about.hbs > cargo-licenses.html)
+
+rm -rf \
+    ~/.local \
+    packages/backend/native-utils/target

@@ -15,7 +15,6 @@ apt-get install -y \
     git \
     build-essential \
     debhelper \
-    pbuilder \
     devscripts \
     lsb-release \
     wget

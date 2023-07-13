@@ -1,0 +1,33 @@
+name: Deploy for amd64 / Debian bookworm
+
+on:
+    push:
+        branches: [ "main" ]
+        tags: [ "*" ]
+    pull_request:
+        branches: [ "main" ]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        container:
+            image: 'debian:bookworm'
+
+        steps:
+            -   uses: actions/checkout@v3
+
+            -   name: Build
+                run: env TRACE=true ./debian/scripts/build-source
+
+            -   name: Build deb
+                run: env TRACE=true ./debian/scripts/build-deb
+
+            -   name: Test
+                run: env TRACE=true ./debian/scripts/test
+
+            -   name: Release
+                uses: softprops/action-gh-release@v1
+                if: startsWith(github.ref, 'refs/tags/')
+                with:
+                    files: |
+                        ./install/*.deb

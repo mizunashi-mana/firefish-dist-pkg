@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+[ "${TRACE:-false}" = 'true' ] && set -x
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+source "${SCRIPT_DIR}/env.bash"
+
+apt install -y "${INSTALL_DIR}/"calckey_*.deb
+
+/usr/bin/calckey-starter || echo

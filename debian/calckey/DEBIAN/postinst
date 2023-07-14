@@ -30,7 +30,7 @@ case "$1" in
     adduser \
         --quiet \
         --system \
-        --home "$DATADIR" \
+        --home "/var/lib/calckey" \
         --no-create-home \
         --group \
         --gecos "Calckey daemon" \

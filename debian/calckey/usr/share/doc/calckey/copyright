@@ -1,0 +1,24 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: calckey
+Source: https://codeberg.org/calckey/calckey
+
+Files:
+ var/lib/calckey/live/*
+License: Calckey-Source
+
+Files:
+ etc/calckey/default.yml
+Copyright: © 2023 Calckey
+License: Apache-2.0
+
+Files:
+ debian/*
+ etc/default/calckey
+ lib/systemd/system/calckey.service
+ usr/bin/calckey-start
+ usr/share/calckey/*
+Copyright: © 2023 Mizunashi Mana <contact@mizunashi.work>
+License: Apache-2.0 OR MPL-2.0
+
+License: Calckey-Source
+ See license files.

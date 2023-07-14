@@ -18,6 +18,7 @@ CALCKEY_DATADIR="${INSTALL_DIR}/calckey/var/lib/calckey/live"
 mkdir -p "${CALCKEY_DATADIR}"
 
 mv \
+    .node-version \
     .npmrc \
     cliff.toml \
     custom \
@@ -45,6 +46,7 @@ mv \
     packages/backend/ormconfig.js \
     packages/backend/assets \
     packages/backend/built \
+    packages/backend/migration \
     packages/backend/node_modules \
     "${CALCKEY_DATADIR}/packages/backend/"
 

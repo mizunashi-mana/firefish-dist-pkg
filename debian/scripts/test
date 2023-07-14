@@ -8,4 +8,4 @@ source "${SCRIPT_DIR}/env.bash"
 
 apt install -y "${INSTALL_DIR}/"calckey_*.deb
 
-/usr/bin/calckey-starter || echo
+/usr/bin/calckey-start || echo

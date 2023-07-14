@@ -22,8 +22,7 @@ set -e
 
 USER=calckey
 GROUP="$USER"
-DATADIR=/var/lib/calckey
-CONFFILE="$DATADIR/live/.config/default.yml"
+CONFFILE="/etc/calckey/default.yml"
 
 case "$1" in
   configure)

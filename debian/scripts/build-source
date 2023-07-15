@@ -46,4 +46,5 @@ EOS
 
 rm -rf \
     ~/.local \
+    ~/.cache \
     packages/backend/native-utils/target

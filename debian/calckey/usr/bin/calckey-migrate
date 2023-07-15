@@ -3,12 +3,8 @@
 set -euo pipefail
 [ "${TRACE:-false}" = 'true' ] && set -x
 
-WORKDIR=/var/lib/calckey/live
+WORKDIR=/var/lib/calckey/live/packages/backend
+cd "$WORKDIR"
 
-if [ "$(pwd)" != "$WORKDIR" ] || [ "$USER" != 'calckey' ]; then
-    echo "Invalid working directory or user."
-    exit 1
-fi
-
-(cd "$WORKDIR/packages/backend" && npx typeorm migration:run -d ormconfig.js)
-(cd "$WORKDIR/packages/backend" && ./native-utils/built/migration up)
+npx typeorm migration:run -d ormconfig.js
+./native-utils/built/migration up

@@ -35,6 +35,7 @@ case "$1" in
         --group \
         --gecos "Calckey daemon" \
         "$USER"
+    chown "$USER:$USER" /var/lib/calckey
   ;;
 
   abort-upgrade|abort-remove|abort-deconfigure)

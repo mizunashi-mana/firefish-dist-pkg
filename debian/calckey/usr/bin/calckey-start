@@ -3,15 +3,12 @@
 set -euo pipefail
 [ "${TRACE:-false}" = 'true' ] && set -x
 
-WORKDIR=/var/lib/calckey/live
-
-if [ "$(pwd)" != "$WORKDIR" ] || [ "$USER" != 'calckey' ]; then
-    echo "Invalid working directory or user."
-    exit 1
-fi
+WORKDIR=/var/lib/calckey/live/packages/backend
 
 if [ "${RUN_MIGRATION_ON_START:-false}" = 'true' ]; then
     /usr/bin/calckey-migrate
 fi
 
-exec node "$WORKDIR/packages/backend/built/index.js"
+cd "$WORKDIR"
+
+exec node "$WORKDIR/built/index.js"

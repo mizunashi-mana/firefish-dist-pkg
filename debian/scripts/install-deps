@@ -19,6 +19,8 @@ wget -O/tmp/rustup-init.bash https://sh.rustup.rs
 bash /tmp/rustup-init.bash -y \
   --profile minimal \
   --default-toolchain stable
+rustup self update
+rustup update
 
 DISTRO="$(lsb_release -c -s 2>/dev/null)"
 

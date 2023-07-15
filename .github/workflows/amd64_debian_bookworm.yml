@@ -39,6 +39,8 @@ jobs:
                 run: env TRACE=true ./debian/scripts/test
 
     release:
+        needs:
+            - "build-deb"
         if: startsWith(github.ref, 'refs/tags/')
         runs-on: ubuntu-latest
         steps:

@@ -20,7 +20,6 @@ jobs:
             -   name: Cache main
                 if: |
                     ! startsWith(github.ref, 'refs/tags/')
-                id: cache-main
                 uses: actions/cache@v3
                 with:
                     path: |
@@ -29,7 +28,7 @@ jobs:
                         ~/.cargo
                         ~/.local
                         ~/.cache
-                    key: ${{ runner.os }}-${{ runner.arch }}-main
+                    key: ${{ runner.os }}-${{ runner.arch }}-main-
 
             -   name: Install dependencies
                 run: env TRACE=true ./debian/scripts/install-deps

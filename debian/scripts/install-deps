@@ -19,6 +19,7 @@ wget -O/tmp/rustup-init.bash https://sh.rustup.rs
 bash /tmp/rustup-init.bash -y \
   --profile minimal \
   --default-toolchain stable
+source "$HOME/.cargo/env"
 rustup self update
 rustup update
 

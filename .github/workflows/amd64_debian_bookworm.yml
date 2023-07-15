@@ -33,7 +33,7 @@ jobs:
                     name: deb
                     retention-days: 3
                     path: |
-                        ./debian/install
+                        ./debian/install/*.deb
 
             -   name: Test
                 run: env TRACE=true ./debian/scripts/test

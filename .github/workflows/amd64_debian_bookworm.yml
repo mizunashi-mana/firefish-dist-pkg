@@ -29,7 +29,7 @@ jobs:
                         ~/.cargo
                         ~/.local
                         ~/.cache
-                    key: ${{ runner.os }}-main
+                    key: ${{ runner.os }}-${{ runner.arch }}-main
 
             -   name: Install dependencies
                 run: env TRACE=true ./debian/scripts/install-deps

@@ -1,11 +1,17 @@
 # syntax=docker/dockerfile:1
 
-FROM debian:bookworm
+ARG DISTRO=bookworm
+FROM debian:${DISTRO} AS base
 
 SHELL ["bash", "-euxo", "pipefail", "-c"]
 
-ENV DEBIAN_FRONTEND=noninteractive
 ENV WORK_DIR=/workdir
+ENV DEBIAN_FRONTEND=noninteractive
+
+COPY scripts/install-deps "${WORK_DIR}/scripts/install-deps"
+RUN env TRACE=true "${WORK_DIR}/scripts/install-deps"
+
+FROM base AS builder
 
 COPY scripts "${WORK_DIR}/scripts"
 COPY calckey "${WORK_DIR}/calckey"

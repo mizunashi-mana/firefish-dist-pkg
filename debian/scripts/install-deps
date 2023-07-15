@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+[ "${TRACE:-false}" = 'true' ] && set -x
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+apt-get update -y
+
+apt-get install -y \
+    git \
+    build-essential \
+    debhelper \
+    devscripts \
+    lsb-release \
+    wget
+
+wget -O/tmp/rustup-init.bash https://sh.rustup.rs
+bash /tmp/rustup-init.bash -y \
+  --profile minimal \
+  --default-toolchain stable
+
+DISTRO="$(lsb_release -c -s 2>/dev/null)"
+
+wget -q -O- 'https://deb.nodesource.com/gpgkey/nodesource.gpg.key' \
+    | gpg --dearmor | tee /usr/share/keyrings/nodesource.gpg >/dev/null
+tee /etc/apt/sources.list.d/nodesource.list <<EOS
+deb [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x ${DISTRO} main
+EOS
+
+apt-get update -y
+
+apt-get install -y \
+    nodejs
+
+corepack enable
+corepack prepare pnpm@latest --activate

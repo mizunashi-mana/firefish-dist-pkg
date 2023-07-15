@@ -51,6 +51,9 @@ jobs:
         needs: ["build-image"]
         container:
             image: ${{ needs.build-image.outputs.image }}
+            credentials:
+                username: ${{ github.actor }}
+                password: ${{ secrets.GITHUB_TOKEN }}
 
         steps:
             -   name: Checkout repository

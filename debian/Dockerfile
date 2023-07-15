@@ -17,5 +17,11 @@ COPY scripts "${WORK_DIR}/scripts"
 COPY calckey "${WORK_DIR}/calckey"
 COPY control.m4 "${WORK_DIR}/control.m4"
 
-RUN env TRACE=true "${WORK_DIR}/scripts/build-source"
+RUN <<EOT
+env TRACE=true "${WORK_DIR}/scripts/build-source"
+rm -rf \
+    ~/.local \
+    ~/.cache \
+    packages/backend/native-utils/target
+EOT
 RUN env TRACE=true "${WORK_DIR}/scripts/build-deb"

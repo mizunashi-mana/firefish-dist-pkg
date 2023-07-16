@@ -17,19 +17,28 @@ jobs:
             -   name: Checkout repository
                 uses: actions/checkout@v3
 
-            -   name: Restore cache main
-                id: cache-main-restore
-                if: |
-                    ! startsWith(github.ref, 'refs/tags/')
-                uses: actions/cache/restore@v3
+            -   name: Cache nodejs
+                uses: actions/cache@v3
                 with:
                     path: |
                         ~/.npm
+                    key: nodejs-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+                    restore-keys: |
+                        nodejs-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+                        nodejs-${{ runner.os }}-${{ runner.arch }}-
+
+            -   name: Cache rust
+                uses: actions/cache@v3
+                with:
+                    path: |
                         ~/.rustup
                         ~/.cargo
                         ~/.local
                         ~/.cache
-                    key: ${{ runner.os }}-${{ runner.arch }}-main-
+                    key: rust-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/Cargo.lock') }}
+                    restore-keys: |
+                        rust-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/Cargo.lock') }}
+                        rust-${{ runner.os }}-${{ runner.arch }}-
 
             -   name: Install dependencies
                 run: env TRACE=true ./debian/scripts/install-deps
@@ -51,17 +60,6 @@ jobs:
 
             -   name: Test
                 run: env TRACE=true ./debian/scripts/test
-
-            -   name: Save cache main
-                uses: actions/cache/save@v3
-                with:
-                    path: |
-                        ~/.npm
-                        ~/.rustup
-                        ~/.cargo
-                        ~/.local
-                        ~/.cache
-                    key: ${{ steps.cache-main-restore.outputs.cache-primary-key }}
 
     release:
         needs:

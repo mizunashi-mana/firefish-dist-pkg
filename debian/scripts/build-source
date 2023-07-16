@@ -25,6 +25,10 @@ pnpm run build
 # Trim down the dependencies to only those for production
 pnpm i --prod --frozen-lockfile
 
+# Missing dependencies
+# See https://codeberg.org/calckey/calckey/pulls/10500
+pnpm --filter backend i json5
+
 (cd packages/backend/native-utils && cargo about init)
 tee packages/backend/native-utils/about.toml <<EOS
 accepted = [

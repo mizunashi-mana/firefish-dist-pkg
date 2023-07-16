@@ -10,6 +10,7 @@ TARGET_ARCH="${TARGET_ARCH:-"$(dpkg-architecture -qDEB_HOST_ARCH)"}"
 
 TEMPLATE_DIR="${WORK_DIR}/calckey"
 
+mkdir -p "${INSTALL_DIR}"
 cp -r "$TEMPLATE_DIR" "${INSTALL_DIR}/calckey"
 
 cd "${SOURCE_DIR}"
@@ -84,6 +85,7 @@ mv \
 m4 \
     "-D__ARCH__=${TARGET_ARCH}" \
     "-D__VERSION__=${PKG_VERSION}" \
+    "-D__NODE_MAJOR_VERSION__=${NODE_MAJOR_VERSION}" \
     "${WORK_DIR}/control.m4" \
     > "${INSTALL_DIR}/calckey/DEBIAN/control"
 

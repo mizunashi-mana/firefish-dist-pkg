@@ -6,9 +6,6 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 source "${SCRIPT_DIR}/env.bash"
 
-mkdir -p "${SOURCE_DIR}"
-mkdir -p "${INSTALL_DIR}"
-
 source "$HOME/.cargo/env"
 cargo install cargo-about
 

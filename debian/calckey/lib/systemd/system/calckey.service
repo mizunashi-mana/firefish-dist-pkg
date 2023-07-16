@@ -8,10 +8,11 @@ User=calckey
 WorkingDirectory=/var/lib/calckey/live
 Environment="NODE_ENV=production"
 EnvironmentFile=/etc/default/calckey
-ExecStart=/bin/bash /usr/bin/calckey-start
+ExecStart=/usr/bin/calckey-start
 ExecReload=/bin/kill -SIGUSR1 $MAINPID
 TimeoutSec=15
 Restart=on-failure
+StartLimitBurst=2
 
 # Proc filesystem
 ProcSubset=pid
@@ -47,10 +48,7 @@ ProtectClock=true
 
 # System Call Filtering
 SystemCallArchitectures=native
-SystemCallFilter=~@cpu-emulation @debug @keyring @ipc @mount @obsolete @privileged @setuid
-SystemCallFilter=@chown
-SystemCallFilter=pipe
-SystemCallFilter=pipe2
+SystemCallFilter=~@cpu-emulation @debug @ipc @mount @obsolete @privileged @setuid
 ReadWritePaths=/var/lib/calckey/live
 
 [Install]

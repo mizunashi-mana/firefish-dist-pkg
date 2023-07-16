@@ -52,7 +52,7 @@ jobs:
             -   name: Test
                 run: env TRACE=true ./debian/scripts/test
 
-            -   name: Save Primes
+            -   name: Save cache main
                 uses: actions/cache/save@v3
                 with:
                     path: |

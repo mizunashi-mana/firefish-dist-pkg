@@ -22,9 +22,8 @@ jobs:
                 with:
                     path: |
                         ~/.npm
-                    key: nodejs-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+                    key: nodejs-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('debian/scripts/env.bash') }}
                     restore-keys: |
-                        nodejs-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/pnpm-lock.yaml') }}
                         nodejs-${{ runner.os }}-${{ runner.arch }}-
 
             -   name: Cache rust
@@ -35,9 +34,8 @@ jobs:
                         ~/.cargo
                         ~/.local
                         ~/.cache
-                    key: rust-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/Cargo.lock') }}
+                    key: rust-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('debian/scripts/env.bash') }}
                     restore-keys: |
-                        rust-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/Cargo.lock') }}
                         rust-${{ runner.os }}-${{ runner.arch }}-
 
             -   name: Install dependencies

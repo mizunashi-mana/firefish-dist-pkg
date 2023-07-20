@@ -14,7 +14,7 @@ RUN env TRACE=true "${WORK_DIR}/scripts/install-deps"
 
 FROM base AS builder
 
-COPY calckey "${WORK_DIR}/calckey"
+COPY firefish "${WORK_DIR}/firefish"
 COPY control.m4 "${WORK_DIR}/control.m4"
 
 COPY scripts/build-source "${WORK_DIR}/scripts/build-source"

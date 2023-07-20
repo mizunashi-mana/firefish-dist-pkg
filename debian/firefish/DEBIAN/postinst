@@ -20,22 +20,23 @@ set -e
 #     installation fails and the 'postinst' is called with 'abort-upgrade',
 #     'abort-remove' or 'abort-deconfigure'.
 
-USER=calckey
+USER=firefish
 GROUP="$USER"
-CONFFILE="/etc/calckey/default.yml"
+CONFFILE=/etc/firefish/default.yml
+DATADIR=/var/lib/firefish
 
 case "$1" in
   configure)
-    # Add calckey user
+    # Add service user
     adduser \
         --quiet \
         --system \
-        --home "/var/lib/calckey" \
+        --home "$DATADIR" \
         --no-create-home \
         --group \
-        --gecos "Calckey daemon" \
+        --gecos "Firefish daemon" \
         "$USER"
-    chown "$USER:$USER" /var/lib/calckey
+    chown "$USER:$USER" "$DATADIR"
   ;;
 
   abort-upgrade|abort-remove|abort-deconfigure)
@@ -51,7 +52,7 @@ esac
 # Automatically added by dh_installsystemd/*
 if [ "$1" = "configure" ] || [ "$1" = "abort-upgrade" ] || [ "$1" = "abort-deconfigure" ] || [ "$1" = "abort-remove" ] ; then
 	# The following line should be removed in trixie or trixie+1
-	deb-systemd-helper unmask 'calckey.service' >/dev/null || true
+	deb-systemd-helper unmask 'firefish.service' >/dev/null || true
 
 	if ! dpkg-statoverride --list "${CONFFILE}" >/dev/null 2>&1
 	then
@@ -59,14 +60,14 @@ if [ "$1" = "configure" ] || [ "$1" = "abort-upgrade" ] || [ "$1" = "abort-decon
 	fi
 
 	# was-enabled defaults to true, so new installations run enable.
-	if deb-systemd-helper --quiet was-enabled 'calckey.service'; then
+	if deb-systemd-helper --quiet was-enabled 'firefish.service'; then
 		# Enables the unit on first installation, creates new
 		# symlinks on upgrades if the unit file has changed.
-		deb-systemd-helper enable 'calckey.service' >/dev/null || true
+		deb-systemd-helper enable 'firefish.service' >/dev/null || true
 	else
 		# Update the statefile to add new symlinks (if any), which need to be
 		# cleaned up on purge. Also remove old symlinks.
-		deb-systemd-helper update-state 'calckey.service' >/dev/null || true
+		deb-systemd-helper update-state 'firefish.service' >/dev/null || true
 	fi
 fi
 # End automatically added section
@@ -79,7 +80,7 @@ if [ "$1" = "configure" ] || [ "$1" = "abort-upgrade" ] || [ "$1" = "abort-decon
 		else
 			_dh_action=start
 		fi
-		deb-systemd-invoke $_dh_action 'calckey.service' >/dev/null || true
+		deb-systemd-invoke $_dh_action 'firefish.service' >/dev/null || true
 	fi
 fi
 # End automatically added section

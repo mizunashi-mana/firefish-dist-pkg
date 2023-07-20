@@ -1,4 +1,4 @@
-# Distribution packages of Calckey
+# Distribution packages of Firefish
 
 ## License Notice
 

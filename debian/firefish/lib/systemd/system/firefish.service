@@ -1,14 +1,14 @@
 [Unit]
-Description=calckey
+Description=firefish
 After=network.target
 
 [Service]
 Type=simple
-User=calckey
-WorkingDirectory=/var/lib/calckey/live
+User=firefish
+WorkingDirectory=/var/lib/firefish/live
 Environment="NODE_ENV=production"
-EnvironmentFile=/etc/default/calckey
-ExecStart=/usr/bin/calckey-start
+EnvironmentFile=/etc/default/firefish
+ExecStart=/usr/bin/firefish-start
 ExecReload=/bin/kill -SIGUSR1 $MAINPID
 TimeoutSec=15
 Restart=on-failure
@@ -49,7 +49,7 @@ ProtectClock=true
 # System Call Filtering
 SystemCallArchitectures=native
 SystemCallFilter=~@cpu-emulation @debug @ipc @mount @obsolete @privileged @setuid
-ReadWritePaths=/var/lib/calckey/live
+ReadWritePaths=/var/lib/firefish/live
 
 [Install]
 WantedBy=multi-user.target

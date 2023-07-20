@@ -1,27 +1,27 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: calckey
-Source: https://codeberg.org/calckey/calckey
+Upstream-Name: firefish
+Source: https://codeberg.org/firefish/firefish
 
 Files:
- var/lib/calckey/live/*
+ var/lib/firefish/live/*
 Copyright: Each holders
-License: Calckey-Source
+License: Firefish-Source
 
 Files:
- etc/calckey/default.yml
-Copyright: © 2023 Calckey
+ etc/firefish/default.yml
+Copyright: © 2023 Firefish
 License: Apache-2.0
 
 Files:
  debian/*
- etc/default/calckey
- lib/systemd/system/calckey.service
- usr/bin/calckey-start
- usr/share/calckey/*
+ etc/default/firefish
+ lib/systemd/system/firefish.service
+ usr/bin/firefish-start
+ usr/share/firefish/*
 Copyright: © 2023 Mizunashi Mana <contact@mizunashi.work>
 License: Apache-2.0 or MPL-2.0
 
-License: Calckey-Source
+License: Firefish-Source
  See license files.
 
 License: Apache-2.0

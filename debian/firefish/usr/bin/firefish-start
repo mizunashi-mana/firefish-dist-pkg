@@ -3,10 +3,10 @@
 set -euo pipefail
 [ "${TRACE:-false}" = 'true' ] && set -x
 
-WORKDIR=/var/lib/calckey/live/packages/backend
+WORKDIR=/var/lib/firefish/live/packages/backend
 
 if [ "${RUN_MIGRATION_ON_START:-false}" = 'true' ]; then
-    /usr/bin/calckey-migrate
+    /usr/bin/firefish-migrate
 fi
 
 cd "$WORKDIR"

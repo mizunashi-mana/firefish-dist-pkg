@@ -87,6 +87,7 @@ mkdir -p "${LIVEDIR}/packages/megalodon"
 mv \
     packages/megalodon/package.json \
     packages/megalodon/node_modules \
+    packages/megalodon/lib \
     "${LIVEDIR}/packages/megalodon/"
 
 m4 \

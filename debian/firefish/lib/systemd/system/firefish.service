@@ -48,6 +48,7 @@ ProtectClock=true
 
 # System Call Filtering
 SystemCallArchitectures=native
+SystemCallFilter=~@cpu-emulation @debug @keyring @memlock @module @mount @obsolete @reboot @setuid
 ReadWritePaths=/var/lib/firefish
 
 [Install]

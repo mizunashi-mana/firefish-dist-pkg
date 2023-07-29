@@ -54,6 +54,7 @@ jobs:
                     context: ./debian
                     push: false
                     load: true
+                    tags: firefish-dist-pkg/debian-builder
                     target: builder
                     cache-from: type=local,src=/tmp/.buildx-cache
 

@@ -20,6 +20,7 @@ CapabilityBoundingSet=
 NoNewPrivileges=true
 
 # Sandboxing
+DevicePolicy=closed
 LockPersonality=true
 RemoveIPC=true
 PrivateTmp=true

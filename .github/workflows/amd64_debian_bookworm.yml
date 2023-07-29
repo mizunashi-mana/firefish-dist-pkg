@@ -40,21 +40,28 @@ jobs:
                         buildx-cache-
 
             -   name: Build deb
-                id: build_deb
+                uses: docker/build-push-action@v4
+                with:
+                    context: ./debian
+                    push: false
+                    target: builder
+                    cache-from: type=local,src=/tmp/.buildx-cache
+                    cache-to: type=local,dest=/tmp/.buildx-cache
+
+            -   name: Build deb and load
                 uses: docker/build-push-action@v4
                 with:
                     context: ./debian
                     push: false
                     load: true
-                    tags: ghcr.io/mizunashi-mana/firefish-dist-pkg/debian-builder:latest
                     target: builder
                     cache-from: type=local,src=/tmp/.buildx-cache
-                    cache-to: type=local,dest=/tmp/.buildx-cache
 
             -   name: Copy deb
                 run: |
+                    docker images
                     docker create --name firefish-builder-container \
-                        ghcr.io/mizunashi-mana/firefish-dist-pkg/debian-builder:latest
+                        firefish-dist-pkg/debian-builder
                     docker cp firefish-builder-container:/workdir/dest ./dest
                     docker rm -f firefish-builder-container
 

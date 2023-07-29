@@ -35,9 +35,16 @@ FROM base AS runner
 
 COPY --from=builder "${WORK_DIR}/dest" "${WORK_DIR}/dest"
 
-COPY scripts/test-install "${WORK_DIR}/scripts/test-install"
-RUN env TRACE=true "${WORK_DIR}/scripts/test-install"
+COPY scripts/install "${WORK_DIR}/scripts/install"
+RUN <<EOT
+env TRACE=true "${WORK_DIR}/scripts/install"
+rm -rf "${WORK_DIR}/dest"
 
+apt-get clean
+rm -rf /var/lib/apt/lists/*
+EOT
+
+USER firefish
 ENV RUN_MIGRATION_ON_START=true
 
 CMD ["/usr/bin/firefish-start"]

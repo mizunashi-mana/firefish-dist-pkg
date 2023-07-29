@@ -8,9 +8,8 @@ source "${SCRIPT_DIR}/env.bash"
 
 apt-get update -y
 
-apt-get install -y \
-    wget \
-    gpg
+INSTALL_DEPS=(wget gpg)
+apt-get install -y "${INSTALL_DEPS[@]}"
 
 wget -q -O- 'https://deb.nodesource.com/gpgkey/nodesource.gpg.key' \
     | gpg --dearmor | tee /usr/share/keyrings/nodesource.gpg >/dev/null
@@ -18,9 +17,8 @@ tee /etc/apt/sources.list.d/nodesource.list <<EOS
 deb [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_${NODE_MAJOR_VERSION}.x ${DISTRO} main
 EOS
 
+apt-get remove -y "${INSTALL_DEPS[@]}"
+
 apt-get update -y
-
-apt-get install -y \
-    nodejs
-
-apt install -y "${DEST_DIR}/"firefish_*.deb
+apt-get install -y nodejs
+apt-get install -y "${DEST_DIR}/"firefish_*.deb

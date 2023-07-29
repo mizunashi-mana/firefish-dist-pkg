@@ -10,54 +10,37 @@ on:
 jobs:
     build-deb:
         runs-on: ubuntu-latest
-        container:
-            image: debian:bookworm
 
         steps:
             -   name: Checkout repository
                 uses: actions/checkout@v3
 
-            -   name: Cache nodejs
-                uses: actions/cache@v3
-                with:
-                    path: |
-                        ~/.npm
-                    key: nodejs-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('debian/scripts/env.bash') }}
-                    restore-keys: |
-                        nodejs-${{ runner.os }}-${{ runner.arch }}-
-
-            -   name: Cache rust
-                uses: actions/cache@v3
-                with:
-                    path: |
-                        ~/.rustup
-                        ~/.cargo
-                        ~/.local
-                        ~/.cache
-                    key: rust-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('debian/scripts/env.bash') }}
-                    restore-keys: |
-                        rust-${{ runner.os }}-${{ runner.arch }}-
-
-            -   name: Install dependencies
-                run: env TRACE=true ./debian/scripts/install-deps
-
-            -   name: Build
-                run: env TRACE=true ./debian/scripts/build-source
-
             -   name: Build deb
-                run: env TRACE=true ./debian/scripts/build-deb
+                run: docker build --tag firefish-builder --target builder debian/
+
+            -   name: Copy deb
+                run: |
+                    docker create --name firefish-builder-container firefish-builder
+                    docker cp firefish-builder-container:/workdir/dest ./dest
+                    docker rm -f firefish-builder-container
 
             -   name: Archive deb artifact
-                if: startsWith(github.ref, 'refs/tags/')
                 uses: actions/upload-artifact@v3
                 with:
                     name: deb
-                    retention-days: 3
+                    retention-days: 1
                     path: |
-                        ./debian/install/*.deb
+                        ./dest/*.deb
+
+            -   name: Build runner image
+                run: |
+                    docker compose -f debian/docker-compose.yml pull
+                    docker compose -f debian/docker-compose.yml build
 
             -   name: Test
-                run: env TRACE=true ./debian/scripts/test
+                run: |
+                    docker compose -f debian/docker-compose.yml up -d
+                    env TRACE=true ./debian/scripts/test
 
     release:
         needs:
@@ -72,7 +55,6 @@ jobs:
 
             -   name: Release
                 uses: softprops/action-gh-release@v1
-                if: startsWith(github.ref, 'refs/tags/')
                 with:
                     files: |
                         *.deb

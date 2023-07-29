@@ -8,6 +8,7 @@ SHELL ["bash", "-euxo", "pipefail", "-c"]
 ENV WORK_DIR=/workdir
 ENV DEBIAN_FRONTEND=noninteractive
 
+COPY scripts/params.bash "${WORK_DIR}/scripts/params.bash"
 COPY scripts/env.bash "${WORK_DIR}/scripts/env.bash"
 
 FROM base AS builder

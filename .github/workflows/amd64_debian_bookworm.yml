@@ -15,6 +15,16 @@ jobs:
             -   name: Checkout repository
                 uses: actions/checkout@v3
 
+            -   name: Generate params if needed
+                if: startsWith(github.ref, 'refs/tags/')
+                run: ./debian/scripts/gen-params
+
+            -   name: Check package version
+                if: startsWith(github.ref, 'refs/tags/')
+                run: |
+                    source ./debian/scripts/env.bash
+                    [ "$PKG_VERSION" = "$GITHUB_REF_NAME" ]
+
             -   name: Build deb
                 run: docker build --tag firefish-builder --target builder debian/
 

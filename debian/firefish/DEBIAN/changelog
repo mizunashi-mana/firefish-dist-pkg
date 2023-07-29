@@ -1,5 +1,7 @@
-firefish (1.0.3-d2023072900-release) unstable; urgency=medium
+firefish (1.0.3-d2023073000-release) unstable; urgency=medium
 
-* Initial release.
+Firefish v1.0.3: https://git.joinfirefish.org/firefish/firefish/-/releases/v1.0.3
+
+There are no major differences between v1.0.1 and v1.0.3, but we now host our own code forge at https://git.joinfirefish.org/firefish/firefish, and there's some minor fixes with assets, ratelimits, and caching.
 
 -- Mizunashi Mana <contact@mizunashi.work>  Sat, 29 Jul 2023 17:10:03 +0900

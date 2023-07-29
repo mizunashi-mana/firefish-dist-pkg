@@ -45,15 +45,16 @@ jobs:
                 with:
                     context: ./debian
                     push: false
-                    tags: temp/firefish-builder:latest
+                    load: true
+                    tags: ghcr.io/mizunashi-mana/firefish-dist-pkg/debian-builder:latest
                     target: builder
                     cache-from: type=local,src=/tmp/.buildx-cache
                     cache-to: type=local,dest=/tmp/.buildx-cache
-                    load: true
 
             -   name: Copy deb
                 run: |
-                    docker create --name firefish-builder-container temp/firefish-builder
+                    docker create --name firefish-builder-container \
+                        ghcr.io/mizunashi-mana/firefish-dist-pkg/debian-builder:latest
                     docker cp firefish-builder-container:/workdir/dest ./dest
                     docker rm -f firefish-builder-container
 
@@ -70,10 +71,10 @@ jobs:
                 with:
                     context: ./debian
                     push: false
+                    load: true
                     target: runner
                     cache-from: type=local,src=/tmp/.buildx-cache
                     cache-to: type=local,dest=/tmp/.buildx-cache
-                    load: true
 
             -   name: Pull other images
                 run: |

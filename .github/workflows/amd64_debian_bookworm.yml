@@ -26,6 +26,7 @@ jobs:
                     [ "$PKG_VERSION" = "$GITHUB_REF_NAME" ]
 
             -   name: Set up Docker Buildx
+                id: buildx
                 uses: docker/setup-buildx-action@v1
 
             -   name: Cache Docker layers
@@ -39,11 +40,19 @@ jobs:
                         buildx-cache-
 
             -   name: Build deb
-                run: docker build --tag firefish-builder --target builder debian/
+                id: build_deb
+                uses: docker/build-push-action@v2
+                with:
+                    context: ./debian
+                    builder: ${{ steps.buildx.outputs.name }}
+                    push: false
+                    target: builder
+                    cache-from: type=local,src=/tmp/.buildx-cache
+                    cache-to: type=local,dest=/tmp/.buildx-cache
 
             -   name: Copy deb
                 run: |
-                    docker create --name firefish-builder-container firefish-builder
+                    docker create --name firefish-builder-container ${{ steps.build_deb.outputs.imageid }}
                     docker cp firefish-builder-container:/workdir/dest ./dest
                     docker rm -f firefish-builder-container
 
@@ -56,9 +65,18 @@ jobs:
                         ./dest/*.deb
 
             -   name: Build runner image
+                uses: docker/build-push-action@v2
+                with:
+                    context: ./debian
+                    builder: ${{ steps.buildx.outputs.name }}
+                    push: false
+                    target: runner
+                    cache-from: type=local,src=/tmp/.buildx-cache
+                    cache-to: type=local,dest=/tmp/.buildx-cache
+
+            -   name: Pull other images
                 run: |
                     docker compose -f debian/docker-compose.yml pull
-                    docker compose -f debian/docker-compose.yml build
 
             -   name: Test
                 run: |

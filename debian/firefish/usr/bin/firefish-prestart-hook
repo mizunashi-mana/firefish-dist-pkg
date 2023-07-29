@@ -3,12 +3,6 @@
 set -euo pipefail
 [ "${TRACE:-false}" = 'true' ] && set -x
 
-WORKDIR=/var/lib/firefish/live/packages/backend
-
 if [ "${RUN_MIGRATION_ON_START:-false}" = 'true' ]; then
     /usr/bin/firefish-migrate
 fi
-
-cd "$WORKDIR"
-
-exec node "$WORKDIR/built/index.js"

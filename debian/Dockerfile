@@ -40,12 +40,15 @@ COPY scripts/install "${WORK_DIR}/scripts/install"
 RUN <<EOT
 env TRACE=true "${WORK_DIR}/scripts/install"
 rm -rf "${WORK_DIR}/dest"
+rm -rf "${WORK_DIR}/scripts"
 
 apt-get clean
 rm -rf /var/lib/apt/lists/*
 EOT
 
 USER firefish
-ENV RUN_MIGRATION_ON_START=true
+WORKDIR /var/lib/firefish/live/packages/backend
 
-CMD ["/usr/bin/firefish-start"]
+ARG RUN_MIGRATION_ON_START=true
+
+CMD ["bash", "-c", "/usr/bin/firefish-prestart-hook && node /var/lib/firefish/live/packages/backend/built/index.js"]

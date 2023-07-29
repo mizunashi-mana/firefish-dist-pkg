@@ -5,10 +5,11 @@ After=network.target
 [Service]
 Type=simple
 User=firefish
-WorkingDirectory=/var/lib/firefish/work
+WorkingDirectory=/var/lib/firefish/live/packages/backend
 Environment="NODE_ENV=production"
 EnvironmentFile=/etc/default/firefish
-ExecStart=/usr/bin/firefish-start
+ExecStartPre=/usr/bin/firefish-prestart-hook
+ExecStart=/usr/bin/node /var/lib/firefish/live/packages/backend/built/index.js
 ExecReload=/bin/kill -SIGUSR1 $MAINPID
 TimeoutSec=15
 Restart=on-failure
@@ -57,10 +58,9 @@ SystemCallFilter=~@memlock
 SystemCallFilter=~@module
 SystemCallFilter=~@mount
 SystemCallFilter=~@obsolete
-SystemCallFilter=~@pkey
-SystemCallFilter=~@privileged
-SystemCallFilter=~@process
 SystemCallFilter=~@reboot
+SystemCallFilter=~@resources
+SystemCallFilter=setpriority
 SystemCallFilter=~@setuid
 ReadWritePaths=/var/lib/firefish/work
 ReadWritePaths=/var/lib/firefish/files

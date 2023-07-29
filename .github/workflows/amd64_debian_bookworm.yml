@@ -46,13 +46,14 @@ jobs:
                     context: ./debian
                     builder: ${{ steps.buildx.outputs.name }}
                     push: false
+                    tags: firefish-builder
                     target: builder
                     cache-from: type=local,src=/tmp/.buildx-cache
                     cache-to: type=local,dest=/tmp/.buildx-cache
 
             -   name: Copy deb
                 run: |
-                    docker create --name firefish-builder-container ${{ steps.build_deb.outputs.imageid }}
+                    docker create --name firefish-builder-container firefish-builder
                     docker cp firefish-builder-container:/workdir/dest ./dest
                     docker rm -f firefish-builder-container
 

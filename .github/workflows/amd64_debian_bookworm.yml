@@ -48,7 +48,7 @@ jobs:
                     cache-from: type=local,src=/tmp/.buildx-cache
                     cache-to: type=local,dest=/tmp/.buildx-cache
 
-            -   name: Build deb and load
+            -   name: Load builder image
                 uses: docker/build-push-action@v4
                 with:
                     context: ./debian
@@ -78,10 +78,18 @@ jobs:
                 with:
                     context: ./debian
                     push: false
-                    load: true
                     target: runner
                     cache-from: type=local,src=/tmp/.buildx-cache
                     cache-to: type=local,dest=/tmp/.buildx-cache
+
+            -   name: Load runner image
+                uses: docker/build-push-action@v4
+                with:
+                    context: ./debian
+                    push: false
+                    load: true
+                    target: runner
+                    cache-from: type=local,src=/tmp/.buildx-cache
 
             -   name: Pull other images
                 run: |

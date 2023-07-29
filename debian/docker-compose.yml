@@ -1,0 +1,34 @@
+version: "3"
+
+services:
+    firefish:
+        build: .
+        depends_on:
+            - db
+            - redis
+        ports:
+            - "3000:3000"
+        networks:
+            - internal-net
+        volumes:
+            - ./docker/files:/var/lib/firefish/files
+            - ./docker/default.yml:/etc/firefish/default.yml:ro
+
+    redis:
+        image: docker.io/redis:7.0-alpine
+        networks:
+            - internal-net
+        volumes:
+            - ./docker/redis:/data
+
+    postgres:
+        image: docker.io/postgres:15-alpine
+        networks:
+            - internal-net
+        env_file:
+            - ./docker/postgres.env
+        volumes:
+            - ./docker/postgres:/var/lib/postgresql/data
+
+networks:
+    internal-net:

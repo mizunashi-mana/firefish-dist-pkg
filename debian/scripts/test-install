@@ -9,20 +9,8 @@ source "${SCRIPT_DIR}/env.bash"
 apt-get update -y
 
 apt-get install -y \
-    git \
-    build-essential \
-    debhelper \
-    devscripts \
     wget \
-    rsync
-
-wget -O/tmp/rustup-init.bash https://sh.rustup.rs
-bash /tmp/rustup-init.bash -y \
-  --profile minimal \
-  --default-toolchain stable
-source "$HOME/.cargo/env"
-rustup self update
-rustup update
+    gpg
 
 wget -q -O- 'https://deb.nodesource.com/gpgkey/nodesource.gpg.key' \
     | gpg --dearmor | tee /usr/share/keyrings/nodesource.gpg >/dev/null
@@ -35,5 +23,4 @@ apt-get update -y
 apt-get install -y \
     nodejs
 
-corepack enable
-corepack prepare pnpm@latest --activate
+apt install -y "${DEST_DIR}/"firefish_*.deb

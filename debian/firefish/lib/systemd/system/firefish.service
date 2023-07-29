@@ -5,7 +5,7 @@ After=network.target
 [Service]
 Type=simple
 User=firefish
-WorkingDirectory=/var/lib/firefish/live
+WorkingDirectory=/var/lib/firefish/work
 Environment="NODE_ENV=production"
 EnvironmentFile=/etc/default/firefish
 ExecStart=/usr/bin/firefish-start
@@ -47,8 +47,23 @@ ProtectClock=true
 
 # System Call Filtering
 SystemCallArchitectures=native
-SystemCallFilter=~@cpu-emulation @debug @keyring @memlock @module @mount @obsolete @reboot @setuid
-ReadWritePaths=/var/lib/firefish
+SystemCallFilter=~@cpu-emulation
+SystemCallFilter=~@debug
+SystemCallFilter=~@ipc
+SystemCallFilter=pipe
+SystemCallFilter=pipe2
+SystemCallFilter=~@keyring
+SystemCallFilter=~@memlock
+SystemCallFilter=~@module
+SystemCallFilter=~@mount
+SystemCallFilter=~@obsolete
+SystemCallFilter=~@pkey
+SystemCallFilter=~@privileged
+SystemCallFilter=~@process
+SystemCallFilter=~@reboot
+SystemCallFilter=~@setuid
+ReadWritePaths=/var/lib/firefish/work
+ReadWritePaths=/var/lib/firefish/files
 
 [Install]
 WantedBy=multi-user.target

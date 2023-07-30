@@ -3,7 +3,7 @@ if [ -e "${SCRIPT_DIR}/params.bash" ]; then
     source "${SCRIPT_DIR}/params.bash"
 fi
 
-DISTRO="${DISTRO:-bookworm}"
+DISTRO="${DISTRO:-"$(lsb_release -c -s 2>/dev/null)"}"
 
 PKG_VERSION_FIREFISH="${PKG_VERSION_FIREFISH:-1.0.3}"
 PKG_VERSION_DEB="${PKG_VERSION_DEB:-"d$(date +%Y%m%d%H%M%S)-alpha"}"

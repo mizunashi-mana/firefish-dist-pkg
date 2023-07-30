@@ -1,4 +1,4 @@
-name: Deploy for amd64 / Debian bookworm
+name: Deploy for amd64 / Debian bullseye
 
 on:
     push:
@@ -9,7 +9,7 @@ on:
 
 env:
     DISTRO_BASE: debian
-    DISTRO: bookworm
+    DISTRO: bullseye
 
 jobs:
     build-deb:

@@ -1,9 +1,12 @@
 # syntax=docker/dockerfile:1
 
+ARG DISTRO_BASE=debian
 ARG DISTRO=bookworm
-FROM debian:${DISTRO} AS base
+FROM ${DISTRO_BASE}:${DISTRO} AS base
 
 SHELL ["bash", "-euxo", "pipefail", "-c"]
+
+ARG DISTRO
 
 ENV WORK_DIR=/workdir
 ENV DEBIAN_FRONTEND=noninteractive

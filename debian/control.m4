@@ -11,4 +11,4 @@ Depends:    adduser,
             ffmpeg
 Conflicts:  calckey
 Rules-Requires-Root: no
-Description: FIrefish service.
+Description: Firefish service.

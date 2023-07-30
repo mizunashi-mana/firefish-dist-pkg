@@ -8,22 +8,8 @@ source "${SCRIPT_DIR}/env.bash"
 
 apt-get update -y
 
-apt-get install -y \
-    build-essential \
-    debhelper \
-    devscripts \
-    git \
-    rsync \
-    wget
-
-wget -O/tmp/rustup-init.bash https://sh.rustup.rs
-bash /tmp/rustup-init.bash -y \
-  --no-modify-path \
-  --profile minimal \
-  --default-toolchain stable
-source "$HOME/.cargo/env"
-rustup self update
-rustup update
+INSTALL_DEPS=(wget gpg)
+apt-get install -y "${INSTALL_DEPS[@]}"
 
 wget -q -O- 'https://deb.nodesource.com/gpgkey/nodesource.gpg.key' \
     | gpg --dearmor | tee /usr/share/keyrings/nodesource.gpg >/dev/null
@@ -31,10 +17,8 @@ tee /etc/apt/sources.list.d/nodesource.list <<EOS
 deb [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_${NODE_MAJOR_VERSION}.x ${DISTRO} main
 EOS
 
+apt-get remove -y "${INSTALL_DEPS[@]}"
+
 apt-get update -y
-
-apt-get install -y \
-    nodejs
-
-corepack enable
-corepack prepare pnpm@latest --activate
+apt-get install -y nodejs
+apt-get install -y "${DEST_DIR}/"firefish_*.deb

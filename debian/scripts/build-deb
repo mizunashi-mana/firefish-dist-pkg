@@ -97,7 +97,8 @@ m4 \
     "${WORK_DIR}/control.m4" \
     > "${INSTALL_DIR}/firefish/DEBIAN/control"
 
-cd "${INSTALL_DIR}"
+mkdir -p "${DEST_DIR}"
+cd "${DEST_DIR}"
 
 # Ubuntu use zstd by default and Debian failed to unpack zstd archive.
 dpkg-deb -Zgzip --build "${INSTALL_DIR}/firefish/" .

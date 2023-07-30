@@ -31,12 +31,14 @@ case "$1" in
     adduser \
         --quiet \
         --system \
-        --home "$DATADIR" \
-        --no-create-home \
+        --home "$DATADIR/work" \
         --group \
         --gecos "Firefish daemon" \
         "$USER"
-    chown "$USER:$USER" "$DATADIR"
+
+    mkdir -p "$DATADIR/files"
+    chown "$USER:$USER" "$DATADIR/files"
+    chmod 0750 "$DATADIR/files"
   ;;
 
   abort-upgrade|abort-remove|abort-deconfigure)

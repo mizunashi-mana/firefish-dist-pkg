@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+[ "${TRACE:-false}" = 'true' ] && set -x
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+PKG_VERSION_DEB="$(echo "$GITHUB_REF_NAME" | sed -E 's/^[0-9.]+-(d[0-9]+-(release|rc|beta|alpha))$/\1/')"
+
+tee "$SCRIPT_DIR/params.bash" <<EOS
+PKG_VERSION_DEB=${PKG_VERSION_DEB}
+EOS

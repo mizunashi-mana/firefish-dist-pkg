@@ -10,54 +10,90 @@ on:
 jobs:
     build-deb:
         runs-on: ubuntu-latest
-        container:
-            image: debian:bookworm
 
         steps:
             -   name: Checkout repository
                 uses: actions/checkout@v3
 
-            -   name: Cache nodejs
+            -   name: Generate params if needed
+                if: startsWith(github.ref, 'refs/tags/')
+                run: ./debian/scripts/gen-params
+
+            -   name: Check package version
+                if: startsWith(github.ref, 'refs/tags/')
+                run: |
+                    source ./debian/scripts/env.bash
+                    [ "$PKG_VERSION" = "$GITHUB_REF_NAME" ]
+
+            -   name: Cache Docker layers
                 uses: actions/cache@v3
                 with:
-                    path: |
-                        ~/.npm
-                    key: nodejs-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('debian/scripts/env.bash') }}
+                    path: /tmp/.buildx-cache
+                    key: buildx-cache-${{ hashFiles('./debian/scripts/env.bash') }}-${{ github.sha }}
                     restore-keys: |
-                        nodejs-${{ runner.os }}-${{ runner.arch }}-
+                        buildx-cache-${{ hashFiles('./debian/scripts/env.bash') }}-${{ github.sha }}
+                        buildx-cache-${{ hashFiles('./debian/scripts/env.bash') }}-
 
-            -   name: Cache rust
-                uses: actions/cache@v3
+            -   name: Set up Docker Buildx
+                uses: docker/setup-buildx-action@v2
                 with:
-                    path: |
-                        ~/.rustup
-                        ~/.cargo
-                        ~/.local
-                        ~/.cache
-                    key: rust-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('debian/scripts/env.bash') }}
-                    restore-keys: |
-                        rust-${{ runner.os }}-${{ runner.arch }}-
-
-            -   name: Install dependencies
-                run: env TRACE=true ./debian/scripts/install-deps
-
-            -   name: Build
-                run: env TRACE=true ./debian/scripts/build-source
+                    install: true
+                    driver-opts: network=host
 
             -   name: Build deb
-                run: env TRACE=true ./debian/scripts/build-deb
+                uses: docker/build-push-action@v4
+                with:
+                    context: ./debian
+                    load: true
+                    target: debcontainer
+                    tags: mizunashi-mana/firefish-dist-pkg/debian-debcontainer
+                    cache-from: type=local,src=/tmp/.buildx-cache
+                    cache-to: type=local,dest=/tmp/.buildx-cache
+
+            -   name: Copy deb
+                run: |
+                    docker create --name deb mizunashi-mana/firefish-dist-pkg/debian-debcontainer
+                    docker cp deb:/workdir/dest ./dest
+                    docker rm deb
+                    ls ./dest
 
             -   name: Archive deb artifact
-                if: startsWith(github.ref, 'refs/tags/')
                 uses: actions/upload-artifact@v3
                 with:
                     name: deb
-                    retention-days: 3
+                    retention-days: 1
                     path: |
-                        ./debian/install/*.deb
+                        ./dest/*.deb
+
+            -   name: Build runner image
+                uses: docker/build-push-action@v4
+                with:
+                    context: ./debian
+                    load: true
+                    target: runner
+                    tags: mizunashi-mana/firefish-dist-pkg/debian-runner
+                    cache-from: type=local,src=/tmp/.buildx-cache
+                    cache-to: type=local,dest=/tmp/.buildx-cache
+
+            -   name: Pull compose images
+                run: |
+                    docker compose -f debian/docker-compose.yml pull
+
+            -   name: Build compose images
+                uses: docker/bake-action@v3
+                with:
+                    workdir: ./debian
+                    files: ./docker-compose.yml
+                    load: true
+                    set: |
+                        *.cache-from=type=local,src=/tmp/.buildx-cache
+                        *.cache-to=type=local,dest=/tmp/.buildx-cache
 
             -   name: Test
-                run: env TRACE=true ./debian/scripts/test
+                run: |
+                    docker compose -f debian/docker-compose.yml up -d
+                    env TRACE=true ./debian/scripts/test
+                    docker compose -f debian/docker-compose.yml logs
 
     release:
         needs:
@@ -72,7 +108,6 @@ jobs:
 
             -   name: Release
                 uses: softprops/action-gh-release@v1
-                if: startsWith(github.ref, 'refs/tags/')
                 with:
                     files: |
                         *.deb

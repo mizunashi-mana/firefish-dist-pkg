@@ -5,50 +5,65 @@ After=network.target
 [Service]
 Type=simple
 User=firefish
-WorkingDirectory=/var/lib/firefish/live
+WorkingDirectory=/var/lib/firefish/live/packages/backend
 Environment="NODE_ENV=production"
 EnvironmentFile=/etc/default/firefish
-ExecStart=/usr/bin/firefish-start
+ExecStartPre=/usr/bin/firefish-prestart-hook
+ExecStart=/usr/bin/node /var/lib/firefish/live/packages/backend/built/index.js
 ExecReload=/bin/kill -SIGUSR1 $MAINPID
 TimeoutSec=15
 Restart=on-failure
 StartLimitBurst=2
 
-# Proc filesystem
-ProtectProc=invisible
-
-# Capabilities
-CapabilityBoundingSet=
-
 # Security
+CapabilityBoundingSet=
 NoNewPrivileges=true
 
 # Sandboxing
-ProtectSystem=strict
+DevicePolicy=closed
+LockPersonality=true
+RemoveIPC=true
 PrivateTmp=true
 PrivateDevices=true
 PrivateUsers=true
+PrivateMounts=true
+ProtectProc=invisible
+ProtectSystem=strict
 ProtectHostname=true
 ProtectKernelLogs=true
 ProtectKernelModules=true
 ProtectKernelTunables=true
 ProtectControlGroups=true
+ProtectClock=true
+RestrictNamespaces=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
 RestrictAddressFamilies=AF_INET
 RestrictAddressFamilies=AF_INET6
 RestrictAddressFamilies=AF_NETLINK
 RestrictAddressFamilies=AF_UNIX
-RestrictNamespaces=true
-LockPersonality=true
-RestrictRealtime=true
-RestrictSUIDSGID=true
-RemoveIPC=true
-PrivateMounts=true
-ProtectClock=true
+ReadWritePaths=/var/lib/firefish/work
+ReadWritePaths=/var/lib/firefish/files
 
 # System Call Filtering
 SystemCallArchitectures=native
-SystemCallFilter=~@cpu-emulation @debug @keyring @memlock @module @mount @obsolete @reboot @setuid
-ReadWritePaths=/var/lib/firefish
+SystemCallFilter=~@clock
+SystemCallFilter=~@cpu-emulation
+SystemCallFilter=~@debug
+SystemCallFilter=~@ipc
+SystemCallFilter=pipe
+SystemCallFilter=pipe2
+SystemCallFilter=~@keyring
+SystemCallFilter=~@memlock
+SystemCallFilter=~@module
+SystemCallFilter=~@mount
+SystemCallFilter=~@obsolete
+SystemCallFilter=~@raw-io
+SystemCallFilter=~@reboot
+SystemCallFilter=~@resources
+SystemCallFilter=setpriority
+SystemCallFilter=~@setuid
+SystemCallFilter=~@swap
 
 [Install]
 WantedBy=multi-user.target

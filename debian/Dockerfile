@@ -50,9 +50,13 @@ rm -rf \
     /var/lib/apt/lists/*
 EOT
 
-FROM base AS runner
+FROM base AS debcontainer
 
 COPY --from=builder "${WORK_DIR}/dest" "${WORK_DIR}/dest"
+
+FROM base AS runner
+
+COPY --from=debcontainer "${WORK_DIR}/dest" "${WORK_DIR}/dest"
 
 COPY scripts/install "${WORK_DIR}/scripts/install"
 RUN <<EOT

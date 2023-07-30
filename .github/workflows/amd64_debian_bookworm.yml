@@ -34,17 +34,6 @@ jobs:
                         buildx-cache-${{ hashFiles('./debian/scripts/env.bash') }}-${{ github.sha }}
                         buildx-cache-${{ hashFiles('./debian/scripts/env.bash') }}-
 
-            -   name: Boot-up Local Docker Registry
-                run: |
-                    docker run --detach --publish 5000:5000 \
-                        --restart=always \
-                        --name registry \
-                        --volume /tmp/docker-registry:/var/lib/registry \
-                        registry:2
-
-            -   name: Wait for Docker Registry
-                run: npx wait-on tcp:5000
-
             -   name: Set up Docker Buildx
                 uses: docker/setup-buildx-action@v2
                 with:
@@ -55,17 +44,17 @@ jobs:
                 uses: docker/build-push-action@v4
                 with:
                     context: ./debian
-                    push: true
-                    target: builder
-                    tags: localhost:5000/firefish-dist-pkg/debian-builder
+                    load: true
+                    target: debcontainer
+                    tags: mizunashi-mana/firefish-dist-pkg/debian-debcontainer
                     cache-from: type=local,src=/tmp/.buildx-cache
                     cache-to: type=local,dest=/tmp/.buildx-cache
 
             -   name: Copy deb
                 run: |
-                    docker create --name deb-container localhost:5000/firefish-dist-pkg/debian-builder
-                    docker cp deb-container:/workdir/dest ./dest
-                    docker rm deb-container
+                    docker create --name deb mizunashi-mana/firefish-dist-pkg/debian-debcontainer
+                    docker cp deb:/workdir/dest ./dest
+                    docker rm deb
                     ls ./dest
 
             -   name: Archive deb artifact
@@ -80,15 +69,14 @@ jobs:
                 uses: docker/build-push-action@v4
                 with:
                     context: ./debian
-                    push: true
+                    load: true
                     target: runner
-                    tags: localhost:5000/firefish-dist-pkg/debian-runner
+                    tags: mizunashi-mana/firefish-dist-pkg/debian-runner
                     cache-from: type=local,src=/tmp/.buildx-cache
                     cache-to: type=local,dest=/tmp/.buildx-cache
 
             -   name: Pull compose images
                 run: |
-                    docker pull localhost:5000/firefish-dist-pkg/debian-runner
                     docker compose -f debian/docker-compose.yml pull
 
             -   name: Build compose images

@@ -94,6 +94,7 @@ jobs:
             -   name: Build compose images
                 uses: docker/bake-action@v3
                 with:
+                    workdir: ./debian
                     files: ./debian/docker-compose.yml
                     load: true
                     set: |

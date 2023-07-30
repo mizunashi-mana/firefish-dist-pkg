@@ -95,7 +95,7 @@ jobs:
                 uses: docker/bake-action@v3
                 with:
                     workdir: ./debian
-                    files: ./debian/docker-compose.yml
+                    files: ./docker-compose.yml
                     load: true
                     set: |
                         *.cache-from=type=local,src=/tmp/.buildx-cache

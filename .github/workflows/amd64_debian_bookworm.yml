@@ -25,10 +25,6 @@ jobs:
                     source ./debian/scripts/env.bash
                     [ "$PKG_VERSION" = "$GITHUB_REF_NAME" ]
 
-            -   name: Set up Docker Buildx
-                id: buildx
-                uses: docker/setup-buildx-action@v2
-
             -   name: Cache Docker layers
                 uses: actions/cache@v3
                 with:
@@ -36,26 +32,38 @@ jobs:
                     key: buildx-cache-${{ hashFiles('./debian/scripts/env.bash') }}-${{ github.sha }}
                     restore-keys: |
                         buildx-cache-${{ hashFiles('./debian/scripts/env.bash') }}-${{ github.sha }}
-                        buildx-cache-${{ hashFiles('./debian/scripts/env.bash') }}
-                        buildx-cache-
+                        buildx-cache-${{ hashFiles('./debian/scripts/env.bash') }}-
+
+            -   name: Boot-up Local Docker Registry
+                run: |
+                    docker run --detach --publish 5000:5000 \
+                        --restart=always \
+                        --name registry \
+                        --volume /tmp/docker-registry:/var/lib/registry \
+                        registry:2
+
+            -   name: Wait for Docker Registry
+                run: npx wait-on tcp:5000
+
+            -   name: Set up Docker Buildx
+                uses: docker/setup-buildx-action@v2
 
             -   name: Build deb
                 uses: docker/build-push-action@v4
                 with:
                     context: ./debian
-                    push: false
-                    load: true
+                    push: true
                     target: builder
-                    tags: mizunashi-mana/firefish-dist-pkg/debian-builder
+                    tags: localhost:5000/firefish-dist-pkg/debian-builder
                     cache-from: type=local,src=/tmp/.buildx-cache
                     cache-to: type=local,dest=/tmp/.buildx-cache
 
             -   name: Copy deb
-                uses: shrink/actions-docker-extract@v2
-                id: build_deb_extract
-                with:
-                    image: mizunashi-mana/firefish-dist-pkg/debian-builder
-                    path: /workdir/dest/.
+                run: |
+                    docker create --name deb-container localhost:5000/firefish-dist-pkg/debian-builder
+                    docker cp deb-container:/workdir/dest ./dest
+                    docker rm deb-container
+                    ls ./dest
 
             -   name: Archive deb artifact
                 uses: actions/upload-artifact@v3
@@ -63,20 +71,21 @@ jobs:
                     name: deb
                     retention-days: 1
                     path: |
-                        ${{ steps.build_deb_extract.outputs.destination }}/*.deb
+                        ./dest/*.deb
 
             -   name: Build runner image
                 uses: docker/build-push-action@v4
                 with:
                     context: ./debian
-                    push: false
-                    load: true
+                    push: true
                     target: runner
+                    tags: localhost:5000/firefish-dist-pkg/debian-runner
                     cache-from: type=local,src=/tmp/.buildx-cache
                     cache-to: type=local,dest=/tmp/.buildx-cache
 
             -   name: Pull compose images
                 run: |
+                    docker pull localhost:5000/firefish-dist-pkg/debian-runner
                     docker compose -f debian/docker-compose.yml pull
 
             -   name: Build compose images

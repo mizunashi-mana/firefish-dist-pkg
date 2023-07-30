@@ -9,12 +9,12 @@ source "${SCRIPT_DIR}/env.bash"
 apt-get update -y
 
 apt-get install -y \
-    git \
     build-essential \
     debhelper \
     devscripts \
-    wget \
-    rsync
+    git \
+    rsync \
+    wget
 
 wget -O/tmp/rustup-init.bash https://sh.rustup.rs
 bash /tmp/rustup-init.bash -y \

@@ -44,27 +44,18 @@ jobs:
                 with:
                     context: ./debian
                     push: false
+                    load: true
                     target: builder
+                    tags: mizunashi-mana/firefish-dist-pkg/debian-builder
                     cache-from: type=local,src=/tmp/.buildx-cache
                     cache-to: type=local,dest=/tmp/.buildx-cache
 
-            -   name: Load builder image
-                uses: docker/build-push-action@v4
-                with:
-                    context: ./debian
-                    push: false
-                    load: true
-                    tags: firefish-dist-pkg/debian-builder
-                    target: builder
-                    cache-from: type=local,src=/tmp/.buildx-cache
-
             -   name: Copy deb
-                run: |
-                    docker images
-                    docker create --name firefish-builder-container \
-                        firefish-dist-pkg/debian-builder
-                    docker cp firefish-builder-container:/workdir/dest ./dest
-                    docker rm -f firefish-builder-container
+                uses: shrink/actions-docker-extract@v2
+                id: build_deb_extract
+                with:
+                    image: mizunashi-mana/firefish-dist-pkg/debian-builder
+                    path: /workdir/dest/.
 
             -   name: Archive deb artifact
                 uses: actions/upload-artifact@v3
@@ -72,18 +63,9 @@ jobs:
                     name: deb
                     retention-days: 1
                     path: |
-                        ./dest/*.deb
+                        ${{ steps.build_deb_extract.outputs.destination }}/*.deb
 
             -   name: Build runner image
-                uses: docker/build-push-action@v4
-                with:
-                    context: ./debian
-                    push: false
-                    target: runner
-                    cache-from: type=local,src=/tmp/.buildx-cache
-                    cache-to: type=local,dest=/tmp/.buildx-cache
-
-            -   name: Load runner image
                 uses: docker/build-push-action@v4
                 with:
                     context: ./debian
@@ -91,10 +73,20 @@ jobs:
                     load: true
                     target: runner
                     cache-from: type=local,src=/tmp/.buildx-cache
+                    cache-to: type=local,dest=/tmp/.buildx-cache
 
-            -   name: Pull other images
+            -   name: Pull compose images
                 run: |
                     docker compose -f debian/docker-compose.yml pull
+
+            -   name: Build compose images
+                uses: docker/bake-action@v3
+                with:
+                    files: ./debian/docker-compose.yml
+                    load: true
+                    set: |
+                        *.cache-from=type=local,src=/tmp/.buildx-cache
+                        *.cache-to=type=local,dest=/tmp/.buildx-cache
 
             -   name: Test
                 run: |

@@ -14,19 +14,26 @@ COPY scripts/env.bash "${WORK_DIR}/scripts/env.bash"
 FROM base AS builder
 
 COPY scripts/install-deps "${WORK_DIR}/scripts/install-deps"
-RUN env TRACE=true "${WORK_DIR}/scripts/install-deps"
-
+COPY scripts/build-source "${WORK_DIR}/scripts/build-source"
 COPY firefish "${WORK_DIR}/firefish"
 COPY control.m4 "${WORK_DIR}/control.m4"
-
-COPY scripts/build-source "${WORK_DIR}/scripts/build-source"
 RUN <<EOT
+env TRACE=true "${WORK_DIR}/scripts/install-deps"
 env TRACE=true "${WORK_DIR}/scripts/build-source"
+apt-get remove -y \
+    git \
+    build-essential \
+    nodejs
+apt-get autoremove -y
+apt-get clean
 rm -rf \
     ~/.npm \
     ~/.local \
     ~/.cache \
-    packages/backend/native-utils/target
+    ~/.cargo \
+    ~/.rustup \
+    "${WORK_DIR}/source/packages/backend/native-utils/target" \
+    /var/lib/apt/lists/*
 EOT
 
 COPY scripts/build-deb "${WORK_DIR}/scripts/build-deb"
@@ -39,11 +46,11 @@ COPY --from=builder "${WORK_DIR}/dest" "${WORK_DIR}/dest"
 COPY scripts/install "${WORK_DIR}/scripts/install"
 RUN <<EOT
 env TRACE=true "${WORK_DIR}/scripts/install"
-rm -rf "${WORK_DIR}/dest"
-rm -rf "${WORK_DIR}/scripts"
-
 apt-get clean
-rm -rf /var/lib/apt/lists/*
+rm -rf \
+    "${WORK_DIR}/dest" \
+    "${WORK_DIR}/scripts" \
+    /var/lib/apt/lists/*
 EOT
 
 USER firefish

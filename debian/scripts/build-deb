@@ -18,7 +18,7 @@ cd "${SOURCE_DIR}"
 LIVEDIR="${INSTALL_DIR}/firefish/var/lib/firefish/live"
 mkdir -p "${LIVEDIR}"
 
-rsync --recursive --relative --links \
+mv \
     custom \
     locales \
     scripts \
@@ -40,12 +40,20 @@ rsync --recursive --relative --links \
     LICENSE \
     README.md \
     SECURITY.md \
+    "${LIVEDIR}/"
+
+mkdir -p "${LIVEDIR}/packages/backend"
+mv \
     packages/backend/package.json \
     packages/backend/ormconfig.js \
     packages/backend/assets \
     packages/backend/built \
     packages/backend/migration \
     packages/backend/node_modules \
+    "${LIVEDIR}/packages/backend/"
+
+mkdir -p "${LIVEDIR}/packages/backend/native-utils"
+mv \
     packages/backend/native-utils/package.json \
     packages/backend/native-utils/Cargo.toml \
     packages/backend/native-utils/Cargo.lock \
@@ -53,18 +61,34 @@ rsync --recursive --relative --links \
     packages/backend/native-utils/npm \
     packages/backend/native-utils/built \
     packages/backend/native-utils/node_modules \
+    "${LIVEDIR}/packages/backend/native-utils/"
+
+mkdir -p "${LIVEDIR}/packages/firefish-js"
+mv \
     packages/firefish-js/package.json \
     packages/firefish-js/LICENSE \
     packages/firefish-js/built \
     packages/firefish-js/node_modules \
+    "${LIVEDIR}/packages/firefish-js/"
+
+mkdir -p "${LIVEDIR}/packages/client"
+mv \
     packages/client/package.json \
     packages/client/node_modules \
+    "${LIVEDIR}/packages/client/"
+
+mkdir -p "${LIVEDIR}/packages/sw"
+mv \
     packages/sw/package.json \
     packages/sw/node_modules \
+    "${LIVEDIR}/packages/sw/"
+
+mkdir -p "${LIVEDIR}/packages/megalodon"
+mv \
     packages/megalodon/package.json \
     packages/megalodon/node_modules \
     packages/megalodon/lib \
-    "${LIVEDIR}/"
+    "${LIVEDIR}/packages/megalodon/"
 
 m4 \
     "-D__ARCH__=${TARGET_ARCH}" \

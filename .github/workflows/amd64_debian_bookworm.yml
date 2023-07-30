@@ -93,6 +93,7 @@ jobs:
                 run: |
                     docker compose -f debian/docker-compose.yml up -d
                     env TRACE=true ./debian/scripts/test
+                    docker compose -f debian/docker-compose.yml logs
 
     release:
         needs:

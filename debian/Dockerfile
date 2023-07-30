@@ -71,6 +71,7 @@ EOT
 USER firefish
 WORKDIR /var/lib/firefish/live/packages/backend
 
-ARG RUN_MIGRATION_ON_START=true
+ENV RUN_MIGRATION_ON_START=true
+ENV TRACE=true
 
 CMD ["bash", "-c", "/usr/bin/firefish-prestart-hook && node /var/lib/firefish/live/packages/backend/built/index.js"]

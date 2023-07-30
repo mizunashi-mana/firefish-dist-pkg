@@ -33,10 +33,12 @@ jobs:
                 uses: actions/cache@v3
                 with:
                     path: /tmp/.buildx-cache
-                    key: buildx-cache-${{ hashFiles('./debian/scripts/env.bash') }}-${{ github.sha }}
+                    key: ${{ env.CACHE_KEY_PREFIX }}-${{ github.sha }}
                     restore-keys: |
-                        buildx-cache-${{ hashFiles('./debian/scripts/env.bash') }}-${{ github.sha }}
-                        buildx-cache-${{ hashFiles('./debian/scripts/env.bash') }}-
+                        ${{ env.CACHE_KEY_PREFIX }}-${{ github.sha }}
+                        ${{ env.CACHE_KEY_PREFIX }}-
+                env:
+                    CACHE_KEY_PREFIX: buildx-cache-${{ env.DISTRO_BASE }}-${{ env.DISTRO }}-${{ hashFiles('./debian/scripts/env.bash') }}
 
             -   name: Set up Docker Buildx
                 uses: docker/setup-buildx-action@v2

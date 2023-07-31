@@ -20,14 +20,13 @@ jobs:
                 uses: actions/checkout@v3
 
             -   name: Generate params if needed
-                if: startsWith(github.ref, 'refs/tags/')
-                run: ./debian/scripts/gen-params
+                run: ./debian/scripts/gen-params > ./debian/scripts/params.bash
 
             -   name: Check package version
                 if: startsWith(github.ref, 'refs/tags/')
                 run: |
                     source ./debian/scripts/env.bash
-                    [ "$PKG_VERSION" = "$GITHUB_REF_NAME" ]
+                    [ "v$PKG_VERSION" = "$GITHUB_REF_NAME" ]
 
             -   name: Cache Docker layers
                 uses: actions/cache@v3
@@ -44,7 +43,6 @@ jobs:
                 uses: docker/setup-buildx-action@v2
                 with:
                     install: true
-                    driver-opts: network=host
 
             -   name: Build deb
                 uses: docker/build-push-action@v4
@@ -64,7 +62,9 @@ jobs:
                     docker create --name deb ghcr.io/mizunashi-mana/firefish-dist-pkg/debian-debcontainer
                     docker cp deb:/workdir/dest ./dest
                     docker rm deb
-                    ls ./dest
+                    for file in $(find ./dest -type f); then
+                        mv "$file" "$(dirname "$file")/${DISTRO_BASE}-${DISTRO}_$(basename "$file")"
+                    fi
 
             -   name: Archive deb artifact
                 uses: actions/upload-artifact@v3
@@ -73,10 +73,6 @@ jobs:
                     retention-days: 1
                     path: |
                         ./dest/*.deb
-
-            -   name: Pull compose images
-                run: |
-                    docker compose -f debian/docker-compose.yml pull
 
             -   name: Build compose images
                 uses: docker/bake-action@v3
@@ -89,6 +85,10 @@ jobs:
                         *.cache-to=type=local,dest=/tmp/.buildx-cache
                         *.args.DISTRO_BASE=${{ env.DISTRO_BASE }}
                         *.args.DISTRO=${{ env.DISTRO }}
+
+            -   name: Pull compose images
+                run: |
+                    docker compose -f debian/docker-compose.yml pull
 
             -   name: Test
                 run: |

@@ -26,29 +26,47 @@ CONFFILE=/etc/firefish/default.yml
 DATADIR=/var/lib/firefish
 
 case "$1" in
-  configure)
-    # Add service user
-    adduser \
-        --quiet \
-        --system \
-        --home "$DATADIR/work" \
-        --group \
-        --gecos "Firefish daemon" \
-        "$USER"
+    configure)
+        # Add service user
+        if ! getent group "$GROUP" >/dev/null; then
+            groupadd --system "$GROUP"
+        fi
+        if ! getent passwd "$USER" >/dev/null; then
+            useradd --system \
+                --gid "$GROUP" \
+                --create-home \
+                --home-dir "$DATADIR/work" \
+                --shell /usr/sbin/nologin \
+                --comment "Firefish daemon" \
+                "$USER"
+        fi
 
-    mkdir -p "$DATADIR/files"
-    chown "$USER:$USER" "$DATADIR/files"
-    chmod 0750 "$DATADIR/files"
-  ;;
+        if [ ! -d "$DATADIR" ]; then
+            mkdir -p "$DATADIR"
+            chown "$USER:$GROUP" "$DATADIR"
+        fi
 
-  abort-upgrade|abort-remove|abort-deconfigure)
-    :
-  ;;
+        # handle cases where package was installed and then purged;
+        # user and group will still exist but with no home dir
+        if [ ! -d "$DATADIR/work" ]; then
+            mkdir -p "$DATADIR/work"
+            chown "$USER:$GROUP" "$DATADIR/work"
+        fi
 
-  *)
-    echo "postinst called with unknown argument '$1'" >&2
-    exit 1
-  ;;
+        if [ ! -d "$DATADIR/files" ]; then
+            mkdir -p "$DATADIR/files"
+            chown "$USER:$GROUP" "$DATADIR/files"
+        fi
+    ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+        :
+    ;;
+
+    *)
+        echo "postinst called with unknown argument '$1'" >&2
+        exit 1
+    ;;
 esac
 
 # Automatically added by dh_installsystemd/*

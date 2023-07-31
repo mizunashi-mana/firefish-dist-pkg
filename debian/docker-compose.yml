@@ -3,7 +3,6 @@ version: "3"
 services:
     firefish:
         build: .
-        image: ghcr.io/mizunashi-mana/firefish-dist-pkg/debian-runner
         depends_on:
             - postgres
             - redis

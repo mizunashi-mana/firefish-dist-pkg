@@ -32,8 +32,8 @@ jobs:
                     source ./debian/scripts/env.bash
                     [ "v$PKG_VERSION" = "$GITHUB_REF_NAME" ]
 
-            -   name: Cache Docker layers
-                uses: actions/cache@v3
+            -   name: Restore cache
+                uses: actions/cache/restore@v3
                 with:
                     path: /tmp/.buildx-cache
                     key: ${{ env.CACHE_KEY_PREFIX }}-${{ github.sha }}
@@ -101,6 +101,15 @@ jobs:
                     docker compose -f debian/docker-compose.yml up -d
                     env TRACE=true ./debian/scripts/test
                     docker compose -f debian/docker-compose.yml logs
+
+            -   name: Save cache
+                if: startsWith(github.ref, 'refs/heads/')
+                uses: actions/cache/save@v3
+                with:
+                    path: /tmp/.buildx-cache
+                    key: ${{ env.CACHE_KEY_PREFIX }}-${{ github.sha }}
+                env:
+                    CACHE_KEY_PREFIX: buildx-cache-${{ matrix.distro_base }}-${{ matrix.distro }}-${{ hashFiles('./debian/scripts/env.bash') }}
 
     release:
         needs:

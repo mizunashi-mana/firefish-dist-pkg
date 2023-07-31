@@ -1,4 +1,4 @@
-name: Deploy for amd64 / Debian bookworm
+name: Deploy for amd64 / Debian
 
 on:
     push:
@@ -10,35 +10,42 @@ on:
 jobs:
     build-deb:
         runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                include:
+                    -   distro_base: "debian"
+                        distro: "bullseye"
+                    -   distro_base: "debian"
+                        distro: "bookworm"
 
         steps:
             -   name: Checkout repository
                 uses: actions/checkout@v3
 
             -   name: Generate params if needed
-                if: startsWith(github.ref, 'refs/tags/')
-                run: ./debian/scripts/gen-params
+                run: ./debian/scripts/gen-params | tee ./debian/scripts/params.bash
 
             -   name: Check package version
                 if: startsWith(github.ref, 'refs/tags/')
                 run: |
                     source ./debian/scripts/env.bash
-                    [ "$PKG_VERSION" = "$GITHUB_REF_NAME" ]
+                    [ "v$PKG_VERSION" = "$GITHUB_REF_NAME" ]
 
             -   name: Cache Docker layers
                 uses: actions/cache@v3
                 with:
                     path: /tmp/.buildx-cache
-                    key: buildx-cache-${{ hashFiles('./debian/scripts/env.bash') }}-${{ github.sha }}
+                    key: ${{ env.CACHE_KEY_PREFIX }}-${{ github.sha }}
                     restore-keys: |
-                        buildx-cache-${{ hashFiles('./debian/scripts/env.bash') }}-${{ github.sha }}
-                        buildx-cache-${{ hashFiles('./debian/scripts/env.bash') }}-
+                        ${{ env.CACHE_KEY_PREFIX }}-${{ github.sha }}
+                        ${{ env.CACHE_KEY_PREFIX }}-
+                env:
+                    CACHE_KEY_PREFIX: buildx-cache-${{ matrix.distro_base }}-${{ matrix.distro }}-${{ hashFiles('./debian/scripts/env.bash') }}
 
             -   name: Set up Docker Buildx
                 uses: docker/setup-buildx-action@v2
                 with:
                     install: true
-                    driver-opts: network=host
 
             -   name: Build deb
                 uses: docker/build-push-action@v4
@@ -46,38 +53,31 @@ jobs:
                     context: ./debian
                     load: true
                     target: debcontainer
-                    tags: mizunashi-mana/firefish-dist-pkg/debian-debcontainer
+                    build-args: |
+                        DISTRO_BASE=${{ matrix.distro_base }}
+                        DISTRO=${{ matrix.distro }}
+                    tags: ghcr.io/mizunashi-mana/firefish-dist-pkg/debian-debcontainer
                     cache-from: type=local,src=/tmp/.buildx-cache
                     cache-to: type=local,dest=/tmp/.buildx-cache
 
             -   name: Copy deb
                 run: |
-                    docker create --name deb mizunashi-mana/firefish-dist-pkg/debian-debcontainer
+                    docker create --name deb ghcr.io/mizunashi-mana/firefish-dist-pkg/debian-debcontainer
                     docker cp deb:/workdir/dest ./dest
                     docker rm deb
-                    ls ./dest
+                    for file in $(find ./dest -type f); do
+                        mv "$file" "$(dirname "$file")/${DEST_PREFIX}_$(basename "$file")"
+                    done
+                env:
+                    DEST_PREFIX: ${{ matrix.distro_base }}-${{ matrix.distro }}
 
             -   name: Archive deb artifact
                 uses: actions/upload-artifact@v3
                 with:
-                    name: deb
+                    name: deb-${{ matrix.distro_base }}-${{ matrix.distro }}
                     retention-days: 1
                     path: |
                         ./dest/*.deb
-
-            -   name: Build runner image
-                uses: docker/build-push-action@v4
-                with:
-                    context: ./debian
-                    load: true
-                    target: runner
-                    tags: mizunashi-mana/firefish-dist-pkg/debian-runner
-                    cache-from: type=local,src=/tmp/.buildx-cache
-                    cache-to: type=local,dest=/tmp/.buildx-cache
-
-            -   name: Pull compose images
-                run: |
-                    docker compose -f debian/docker-compose.yml pull
 
             -   name: Build compose images
                 uses: docker/bake-action@v3
@@ -88,6 +88,12 @@ jobs:
                     set: |
                         *.cache-from=type=local,src=/tmp/.buildx-cache
                         *.cache-to=type=local,dest=/tmp/.buildx-cache
+                        *.args.DISTRO_BASE=${{ matrix.distro_base }}
+                        *.args.DISTRO=${{ matrix.distro }}
+
+            -   name: Pull compose images
+                run: |
+                    docker compose -f debian/docker-compose.yml pull postgres redis
 
             -   name: Test
                 run: |
@@ -101,10 +107,15 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         runs-on: ubuntu-latest
         steps:
-            -   name: Download deb
+            -   name: Download deb for Debian bullseye
                 uses: actions/download-artifact@v3
                 with:
-                    name: deb
+                    name: deb-debian-bullseye
+
+            -   name: Download deb for Debian bookworm
+                uses: actions/download-artifact@v3
+                with:
+                    name: deb-debian-bookworm
 
             -   name: Release
                 uses: softprops/action-gh-release@v1

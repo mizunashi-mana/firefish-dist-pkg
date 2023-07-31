@@ -93,7 +93,7 @@ jobs:
 
             -   name: Pull compose images
                 run: |
-                    docker compose -f debian/docker-compose.yml pull
+                    docker compose -f debian/docker-compose.yml pull postgres redis
 
             -   name: Test
                 run: |

@@ -1,4 +1,4 @@
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE:-"$0"}")" && pwd)"
 if [ -e "${SCRIPT_DIR}/params.bash" ]; then
     source "${SCRIPT_DIR}/params.bash"
 fi

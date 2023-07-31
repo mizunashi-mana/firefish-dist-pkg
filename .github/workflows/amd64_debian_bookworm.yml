@@ -62,9 +62,9 @@ jobs:
                     docker create --name deb ghcr.io/mizunashi-mana/firefish-dist-pkg/debian-debcontainer
                     docker cp deb:/workdir/dest ./dest
                     docker rm deb
-                    for file in $(find ./dest -type f); then
+                    for file in $(find ./dest -type f); do
                         mv "$file" "$(dirname "$file")/${DISTRO_BASE}-${DISTRO}_$(basename "$file")"
-                    fi
+                    done
 
             -   name: Archive deb artifact
                 uses: actions/upload-artifact@v3

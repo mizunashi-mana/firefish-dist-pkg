@@ -16,8 +16,9 @@ Restart=on-failure
 StartLimitBurst=2
 
 # Security
-CapabilityBoundingSet=
 NoNewPrivileges=true
+CapabilityBoundingSet=
+UMask=0027
 
 # Sandboxing
 DevicePolicy=closed
@@ -42,11 +43,10 @@ RestrictAddressFamilies=AF_INET
 RestrictAddressFamilies=AF_INET6
 RestrictAddressFamilies=AF_NETLINK
 RestrictAddressFamilies=AF_UNIX
-ReadWritePaths=/var/lib/firefish/work
-ReadWritePaths=/var/lib/firefish/files
 
 # System Call Filtering
 SystemCallArchitectures=native
+SystemCallFilter=~@chown
 SystemCallFilter=~@clock
 SystemCallFilter=~@cpu-emulation
 SystemCallFilter=~@debug
@@ -58,12 +58,18 @@ SystemCallFilter=~@memlock
 SystemCallFilter=~@module
 SystemCallFilter=~@mount
 SystemCallFilter=~@obsolete
+SystemCallFilter=~@privileged
+SystemCallFilter=capset
 SystemCallFilter=~@raw-io
 SystemCallFilter=~@reboot
 SystemCallFilter=~@resources
 SystemCallFilter=setpriority
 SystemCallFilter=~@setuid
 SystemCallFilter=~@swap
+
+# Directory Filtering
+ReadWritePaths=/var/lib/firefish/work
+ReadWritePaths=/var/lib/firefish/files
 
 [Install]
 WantedBy=multi-user.target

@@ -33,7 +33,8 @@ env TRACE=true "${WORK_DIR}/scripts/build-source"
 apt-get remove -y \
     build-essential \
     git \
-    nodejs
+    nodejs \
+    libvips-dev
 apt-get autoremove -y
 rm -rf \
     ~/.npm \

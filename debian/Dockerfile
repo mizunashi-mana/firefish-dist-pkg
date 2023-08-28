@@ -19,9 +19,6 @@ FROM base AS builder
 COPY scripts/install-deps "${WORK_DIR}/scripts/install-deps"
 RUN <<EOT
 env TRACE=true "${WORK_DIR}/scripts/install-deps"
-apt-get remove -y \
-    wget
-apt-get autoremove -y
 EOT
 
 COPY scripts/build-source "${WORK_DIR}/scripts/build-source"
@@ -34,7 +31,8 @@ apt-get remove -y \
     build-essential \
     git \
     nodejs \
-    libvips-dev
+    libvips-dev \
+    wget
 apt-get autoremove -y
 rm -rf \
     ~/.npm \

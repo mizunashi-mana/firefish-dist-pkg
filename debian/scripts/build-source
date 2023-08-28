@@ -14,7 +14,7 @@ DEB_HOST_MULTIARCH="$(dpkg-architecture -qDEB_HOST_MULTIARCH)"
 
 mkdir -p "$SOURCE_DIR"
 wget -q -O- "$FIREFISH_SOURCE_GIT_REPO/-/archive/$FIREFISH_SOURCE_GIT_COMMIT_REF/firefish-$FIREFISH_SOURCE_GIT_COMMIT_REF.tar.gz" \
-    | tar xf - --strip-components 1 -C "$SOURCE_DIR"
+    | tar zxf - --strip-components 1 -C "$SOURCE_DIR"
 
 cd "${SOURCE_DIR}"
 

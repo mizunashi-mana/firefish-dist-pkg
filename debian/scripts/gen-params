@@ -5,8 +5,8 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
-if [[ ${GITHUB_REF_NAME:-} =~ ^v[0-9.]+-(d[0-9]+-(release|rc|beta|alpha))$ ]]; then
-    PKG_VERSION_DEB="${BASH_REMATCH[1]}"
+if [[ "${GITHUB_REF_NAME:-}" =~ ^v[0-9.]+(\+[a-z0-9.]+)?-(d[0-9]+-(release|rc|beta|alpha))$ ]]; then
+    PKG_VERSION_DEB="${BASH_REMATCH[2]}"
 else
     PKG_VERSION_DEB="d$(date +%Y%m%d%H%M%S)-alpha"
 fi

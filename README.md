@@ -1,6 +1,6 @@
 # Distribution Packages of Firefish
 
-Free to install dev dependencies, build with Rust and manage by pm2. Run with security sandbox.
+Free to install dev dependencies, build with Rust and use pm2. Run by systemd with security sandbox.
 
 ## Debian
 

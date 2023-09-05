@@ -32,6 +32,7 @@ apt-get remove -y \
     git \
     nodejs \
     libvips-dev \
+    jq \
     wget
 apt-get autoremove -y
 rm -rf \

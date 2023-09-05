@@ -15,6 +15,7 @@ apt-get install -y \
     git \
     rsync \
     wget \
+    jq \
     libvips-dev
 
 wget -O/tmp/rustup-init.bash https://sh.rustup.rs

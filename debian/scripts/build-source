@@ -18,6 +18,9 @@ wget -q -O- "$FIREFISH_SOURCE_GIT_REPO/-/archive/$FIREFISH_SOURCE_GIT_COMMIT_REF
 
 cd "${SOURCE_DIR}"
 
+# Version check
+[ "$PKG_VERSION_FIREFISH" = "$(npm pkg get version | jq -r)" ]
+
 pnpm i --frozen-lockfile
 pnpm run build
 

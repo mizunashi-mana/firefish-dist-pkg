@@ -20,18 +20,14 @@ mkdir -p "${LIVEDIR}"
 
 mv \
     custom \
-    locales \
-    scripts \
     .node-version \
     .npmrc \
     animated.svg \
-    cliff.toml \
     package.json \
     patrons.json \
     pnpm-lock.yaml \
     pnpm-workspace.yaml \
     release.json \
-    rome.json \
     title.svg \
     built \
     node_modules \
@@ -39,6 +35,7 @@ mv \
     COPYING \
     LICENSE \
     README.md \
+    RELEASE_NOTES.md \
     SECURITY.md \
     "${LIVEDIR}/"
 
@@ -67,6 +64,8 @@ mkdir -p "${LIVEDIR}/packages/firefish-js"
 mv \
     packages/firefish-js/package.json \
     packages/firefish-js/LICENSE \
+    packages/firefish-js/CHANGELOG.md \
+    packages/firefish-js/README.md \
     packages/firefish-js/built \
     packages/firefish-js/node_modules \
     "${LIVEDIR}/packages/firefish-js/"

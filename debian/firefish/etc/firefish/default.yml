@@ -43,6 +43,10 @@ url: https://example.com/
 # The port that your Firefish server should listen on.
 port: 3000
 
+# The bind host your Firefish server should listen on.
+# If unspecified, the wildcard address will be used.
+#bind: 127.0.0.1
+
 #   ┌──────────────────────────┐
 #───┘ PostgreSQL configuration └────────────────────────────────
 
@@ -153,11 +157,11 @@ reservedUsernames: [
 # Whether disable HSTS
 #disableHsts: true
 
-# Number of worker processes
-#clusterLimit: 1
-
-# Worker only mode
-#onlyQueueProcessor: 1
+# Number of worker processes by type.
+# The sum must not exceed the number of available cores.
+#clusterLimits:
+#  web: 1
+#  queue: 1
 
 # Job concurrency per worker
 # deliverJobConcurrency: 128
@@ -170,6 +174,9 @@ reservedUsernames: [
 # Job attempts
 # deliverJobMaxAttempts: 12
 # inboxJobMaxAttempts: 8
+
+# Local address used for outgoing requests
+#outgoingAddress: 127.0.0.1
 
 # IP address family used for outgoing request (ipv4, ipv6 or dual)
 #outgoingAddressFamily: ipv4

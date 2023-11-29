@@ -5,7 +5,7 @@ fi
 
 DISTRO="${DISTRO:-"$(lsb_release -c -s 2>/dev/null)"}"
 
-PKG_VERSION_FIREFISH="${PKG_VERSION_FIREFISH:-"1.0.4-beta31"}"
+PKG_VERSION_FIREFISH="${PKG_VERSION_FIREFISH:-"1.0.5-rc"}"
 PKG_VERSION_DEB="${PKG_VERSION_DEB:-"d$(date +%Y%m%d%H%M%S)-alpha"}"
 
 NODE_MAJOR_VERSION="${NODE_MAJOR_VERSION:-20}"

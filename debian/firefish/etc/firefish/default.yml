@@ -206,6 +206,9 @@ reservedUsernames: [
 # Proxy remote files (default: false)
 #proxyRemoteFiles: true
 
+# Use authorized fetch for outgoing requests
+signToActivityPubGet: true
+
 #allowedPrivateNetworks: [
 #  '127.0.0.1/32'
 #]

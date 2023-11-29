@@ -64,7 +64,6 @@ mkdir -p "${LIVEDIR}/packages/firefish-js"
 mv \
     packages/firefish-js/package.json \
     packages/firefish-js/LICENSE \
-    packages/firefish-js/CHANGELOG.md \
     packages/firefish-js/README.md \
     packages/firefish-js/built \
     packages/firefish-js/node_modules \

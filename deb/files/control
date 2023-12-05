@@ -1,0 +1,27 @@
+Source: firefish
+Section: web
+Priority: optional
+Maintainer: Mizunashi Mana <contact@mizunashi.work>
+Rules-Requires-Root: no
+Build-Depends:
+  debhelper-compat (= 13),
+  rsync,
+  nodejs (>= 20.0.0),
+Standards-Version: 4.6.2
+Homepage: https://joinfirefish.org/
+Vcs-Git: https://github.com/mizunashi-mana/firefish-dist-pkg.git
+Vcs-browser: https://github.com/mizunashi-mana/firefish-dist-pkg
+
+Package: firefish
+Architecture: any
+Depends:
+  nodejs (>= 20.0.0),
+  ffmpeg,
+  libvips,
+  ${misc:Depends},
+Suggests:
+  postgresql,
+  redis,
+Conflicts:
+  calckey,
+Description: Firefish is an open source, decentralized social media platform that's free forever!

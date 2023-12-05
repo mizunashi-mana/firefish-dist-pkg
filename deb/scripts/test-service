@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+[ "${TRACE:-false}" = 'true' ] && set -x
+
+for i in `seq 1 130`; do
+    if curl --fail -sL http://localhost:3000; then
+        break
+    fi
+    sleep 5
+done
+
+curl --fail -sL http://localhost:3000 | grep 'Thank you for using Firefish!' >/dev/null

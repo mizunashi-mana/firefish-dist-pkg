@@ -10,4 +10,9 @@ for i in `seq 1 130`; do
     sleep 5
 done
 
-curl --fail -sL http://localhost:3000 | grep 'Thank you for using Firefish!' >/dev/null
+HOME_HTML="$(curl --fail -sL http://localhost:3000)"
+if ! echo "$HOME_HTML" | grep 'Thank you for using Firefish!' >/dev/null; then
+    echo 'Failed to find "Thank you for using Firefish!" in home page'
+    echo "$HOME_HTML"
+    exit 1
+fi

@@ -1,4 +1,4 @@
-firefish (1.0.5+rc-d202312060001+beta) UNRELEASED; urgency=medium
+firefish (1.0.5+rc-d202312060002+beta) UNRELEASED; urgency=medium
 
   * Renewal release of Debian packaging.
   * Use dh-make and change version policy.

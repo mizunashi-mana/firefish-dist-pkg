@@ -25,6 +25,12 @@ jobs:
                     -   distro_base: "ubuntu"
                         distro: "focal"
                         arch: amd64
+                    -   distro_base: "debian"
+                        distro: "bookworm"
+                        arch: arm64
+                    -   distro_base: "ubuntu"
+                        distro: "jammy"
+                        arch: arm64
 
         steps:
             -   name: Checkout repository

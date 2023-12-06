@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Mizunashi Mana <contact@mizunashi.work>
 Rules-Requires-Root: no
 Build-Depends:
-  debhelper-compat (= 13),
+  debhelper-compat (= 12),
   rsync,
   nodejs (>= 20.0.0),
 Standards-Version: 4.6.2

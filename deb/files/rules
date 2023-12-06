@@ -1,0 +1,50 @@
+#!/usr/bin/make -f
+
+# See debhelper(7) (uncomment to enable).
+# Output every command that modifies files on the build system.
+export DH_VERBOSE = 1
+
+DEB_DESTDIR=debian/firefish
+
+
+%:
+	dh $@
+
+
+# dh_make generated override targets.
+
+override_dh_auto_configure:
+	./debian/common_tasks/check-build-deps
+
+override_dh_auto_build:
+	./debian/common_tasks/build .
+
+override_dh_auto_install:
+	./debian/common_tasks/install '$(DEB_DESTDIR)/var/lib/firefish/live'
+
+override_dh_auto_clean:
+	dh_auto_clean
+	find . -maxdepth 4 -name node_modules -type d -exec rm -rf {} +
+	find . -maxdepth 4 -name built -type d -exec rm -rf {} +
+	rm -rf \
+		packages/backend/native-utils/about.* \
+		packages/backend/native-utils/cargo-licenses.html
+	rm -rf \
+		packages/backend/assets/instance.css \
+		packages/backend/native-utils/target \
+		packages/megalodon/lib
+
+override_dh_dwz:
+	dh_dwz --exclude ''
+
+override_dh_strip:
+	dh_strip --exclude '' --no-automatic-dbgsym
+
+override_dh_strip_nondeterminism:
+	dh_strip_nondeterminism --exclude ''
+
+override_dh_makeshlibs:
+	dh_makeshlibs -a --no-scripts --exclude '' --no-add-udeb
+
+override_dh_shlibdeps:
+	dh_shlibdeps --exclude ''

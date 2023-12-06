@@ -1,0 +1,7 @@
+firefish (1.0.5+rc-d202312050000+alpha) UNRELEASED; urgency=medium
+
+  * Renewal release of Debian packaging.
+  * Use dh-make and change version policy.
+  * Change the config path (/etc/firefish/default.yml -> /etc/firefish/config.yml).
+
+ -- Mizunashi Mana <contact@mizunashi.work>  Mon, 04 Dec 2023 09:00:47 +0900

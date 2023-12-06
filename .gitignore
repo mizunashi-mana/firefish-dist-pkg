@@ -1,5 +1,4 @@
 /tmp/
 
 # build
-source/
-install/
+.stamp.*

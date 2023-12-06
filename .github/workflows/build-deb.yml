@@ -1,0 +1,140 @@
+name: Build deb
+
+on:
+    push:
+        branches: [ "main" ]
+        tags: [ "*" ]
+    pull_request:
+        branches: [ "main" ]
+
+jobs:
+    build-deb:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                include:
+                    -   distro_base: "debian"
+                        distro: "bullseye"
+                        arch: amd64
+                    -   distro_base: "debian"
+                        distro: "bookworm"
+                        arch: amd64
+                    -   distro_base: "ubuntu"
+                        distro: "jammy"
+                        arch: amd64
+
+        steps:
+            -   name: Checkout repository
+                uses: actions/checkout@v4
+
+            -   name: Check package version
+                if: startsWith(github.ref, 'refs/tags/')
+                run: |
+                    env TRACE=true ./scritps/check-version "$GITHUB_REF_NAME"
+
+            -   name: Set up QEMU
+                uses: docker/setup-qemu-action@v3
+                with:
+                    platforms: linux/${{ matrix.arch }}
+
+            -   id: docker_setup_buildx
+                name: Set up Docker Buildx
+                uses: docker/setup-buildx-action@v3
+                with:
+                    platforms: linux/${{ matrix.arch }}
+
+            -   name: Build deb
+                uses: docker/build-push-action@v5
+                with:
+                    file: ./deb/Dockerfile
+                    load: true
+                    target: debcontainer
+                    build-args: |
+                        DISTRO_BASE=${{ matrix.distro_base }}
+                        DISTRO=${{ matrix.distro }}
+                    platforms: ${{ steps.docker_setup_buildx.outputs.platforms }}
+                    tags: ghcr.io/mizunashi-mana/firefish-dist-pkg/debian-debcontainer
+                    cache-from: type=gha
+                    cache-to: type=gha
+
+            -   name: Copy deb
+                run: |
+                    docker create --name deb ghcr.io/mizunashi-mana/firefish-dist-pkg/debian-debcontainer
+                    docker cp deb:/workdir/dest ./dest
+                    docker rm deb
+                    for file in $(find ./dest -type f); do
+                        mv "$file" "$(dirname "$file")/${DEST_PREFIX}_$(basename "$file")"
+                    done
+                env:
+                    DEST_PREFIX: ${{ matrix.distro_base }}-${{ matrix.distro }}-${{ matrix.arch }}
+
+            -   name: Test deb version
+                if: startsWith(github.ref, 'refs/tags/')
+                run: |
+                    ./deb/scripts/test-version "$GITHUB_REF_NAME" ./dest/*.deb
+
+            -   name: Archive deb artifact
+                uses: actions/upload-artifact@v3
+                with:
+                    name: deb-${{ matrix.distro_base }}-${{ matrix.distro }}-${{ matrix.arch }}
+                    retention-days: 1
+                    path: |
+                        ./dest/*.deb
+
+            -   name: Build compose images
+                uses: docker/bake-action@v4
+                with:
+                    workdir: ./deb
+                    files: ./docker-compose.yml
+                    load: true
+                    set: |
+                        *.cache-from=type=gha
+                        *.cache-to=type=gha
+                        *.platform=${{ steps.docker_setup_buildx.outputs.platforms }}
+                        *.args.DISTRO_BASE=${{ matrix.distro_base }}
+                        *.args.DISTRO=${{ matrix.distro }}
+
+            -   name: Pull compose images
+                run: |
+                    docker compose --file deb/docker-compose.yml \
+                        pull postgres redis
+
+            -   name: Up services and test
+                run: |
+                    docker compose --file deb/docker-compose.yml \
+                        up --detach
+                    sleep 10
+                    env TRACE=true ./deb/scripts/test-service
+                    docker compose --file deb/docker-compose.yml logs
+
+    release:
+        needs:
+            - "build-deb"
+        if: startsWith(github.ref, 'refs/tags/')
+        runs-on: ubuntu-latest
+        steps:
+            -   name: Download deb for Debian bullseye / amd64
+                uses: actions/download-artifact@v3
+                with:
+                    name: deb-debian-bullseye-amd64
+
+            -   name: Download deb for Debian bookworm / amd64
+                uses: actions/download-artifact@v3
+                with:
+                    name: deb-debian-bookworm-amd64
+
+            -   name: Download deb for Debian bookworm / arm64
+                uses: actions/download-artifact@v3
+                with:
+                    name: deb-debian-bookworm-arm64
+
+            -   name: Download deb for Ubuntu jammy / amd64
+                uses: actions/download-artifact@v3
+                with:
+                    name: deb-ubuntu-jammy-amd64
+
+            -   name: Release
+                uses: softprops/action-gh-release@v1
+                with:
+                    files: |
+                        *.deb

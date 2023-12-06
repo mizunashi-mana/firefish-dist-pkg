@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+[ "${TRACE:-false}" = 'true' ] && set -x
+
+apt-get update -y
+
+INSTALL_DEPS=(wget gpg)
+apt-get install -y "${INSTALL_DEPS[@]}"
+
+wget -q -O- 'https://deb.nodesource.com/gpgkey/nodesource.gpg.key' \
+    | gpg --dearmor | tee /usr/share/keyrings/nodesource.gpg >/dev/null
+tee /etc/apt/sources.list.d/nodesource.list <<EOS
+deb [signed-by=/usr/share/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x ${DISTRO} main
+EOS
+
+apt-get remove -y "${INSTALL_DEPS[@]}"
+
+apt-get update -y
+apt-get install -y "${DEB_FILE}"

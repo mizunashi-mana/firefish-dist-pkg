@@ -1,0 +1,8 @@
+include common/env/params.make
+
+PKG_VERSION_FIREFISH?=1.0.5-rc
+
+FIREFISH_SOURCE_GIT_REPO?=https://git.joinfirefish.org/firefish/firefish
+FIREFISH_SOURCE_GIT_COMMIT_REF?=v$(PKG_VERSION_FIREFISH)
+
+SOURCE_ARCHIVE_URL?=$(FIREFISH_SOURCE_GIT_REPO)/-/archive/$(FIREFISH_SOURCE_GIT_COMMIT_REF)/firefish-$(FIREFISH_SOURCE_GIT_COMMIT_REF).tar.gz

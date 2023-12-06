@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+[ "${TRACE:-false}" = 'true' ] && set -x
+
+function check_command() {
+    if ! type "$1" >/dev/null 2>&1; then
+        echo "Command not found: $1"
+        exit 1
+    fi
+}
+
+check_command pnpm
+check_command cargo
+
+if ! cargo --list | grep -E '^\s*about(\s|$)' >/dev/null; then
+    echo 'cargo-about is not installed.'
+    exit 1
+fi

@@ -1,0 +1,42 @@
+version: "3"
+
+services:
+    firefish:
+        build:
+            context: ..
+            dockerfile: ./deb/Dockerfile
+        image: ghcr.io/mizunashi-mana/firefish-dist-pkg/debian-runner
+        depends_on:
+            - redis
+            - postgres
+        ports:
+            - "3000:3000"
+        networks:
+            - internal-net
+        volumes:
+            - ./docker/firefish_config.yml:/etc/firefish/config.yml:ro
+            - firefish-files:/var/lib/firefish/files
+
+    redis:
+        image: docker.io/redis:7.0-alpine
+        networks:
+            - internal-net
+        volumes:
+            - redis-data:/data
+
+    postgres:
+        image: docker.io/postgres:15-alpine
+        networks:
+            - internal-net
+        env_file:
+            - ./docker/postgres.env
+        volumes:
+            - postgres-data:/var/lib/postgresql/data
+
+networks:
+    internal-net:
+
+volumes:
+    redis-data:
+    postgres-data:
+    firefish-files:

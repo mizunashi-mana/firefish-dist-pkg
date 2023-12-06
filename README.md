@@ -2,16 +2,16 @@
 
 Free to install dev dependencies, build with Rust and use pm2. Run by systemd with security sandbox.
 
-## Debian
+## Debian / Ubuntu
 
-Currently, supports bookworm amd64 (and x86_64) only.
+Currently, supports amd64 (x86_64) architecture only.
 
 How to run:
 
 1. Install nodejs v20: https://github.com/nodesource/distributions#debinstall
 2. Download deb from https://github.com/mizunashi-mana/firefish-dist-pkg/releases.
-3. Install deb by `apt install ./firefish_*.deb`.
-4. Edit `/etc/firefish/default.yml` and restart firefish by `systemctl restart firefish`.
+3. Install deb by `apt install ./*_firefish.deb`.
+4. Edit `/etc/firefish/config.yml` and restart firefish by `systemctl restart firefish`.
 
 ## License Notice
 

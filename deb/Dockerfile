@@ -16,22 +16,32 @@ FROM base AS builder
 WORKDIR "${WORK_DIR}"
 
 COPY deb/scripts "${WORK_DIR}/scripts"
-
-RUN <<EOT
-scripts/install-build-deps
-
-apt-get clean
-rm -rf \
-    /var/lib/apt/lists/*
-EOT
-
 COPY common "${WORK_DIR}/common"
 COPY deb/files "${WORK_DIR}/files"
 COPY deb/Makefile "${WORK_DIR}/Makefile"
 
 RUN <<EOT
+scripts/install-build-deps
+
 source "$HOME/.cargo/env"
 make firefish.deb
+
+apt-get remove -y \
+    wget \
+    dh-make \
+    make \
+    rsync \
+    nodejs
+apt-get autoremove -y
+apt-get clean
+rm -rf \
+    ~/.npm \
+    ~/.local \
+    ~/.cache \
+    ~/.cargo \
+    ~/.rustup \
+    pkg/firefish-*/packages/backend/native-utils/target \
+    /var/lib/apt/lists/*
 EOT
 
 FROM base AS debcontainer

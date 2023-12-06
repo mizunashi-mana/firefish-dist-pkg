@@ -33,7 +33,7 @@ jobs:
             -   name: Check package version
                 if: startsWith(github.ref, 'refs/tags/')
                 run: |
-                    env TRACE=true ./scritps/check-version "$GITHUB_REF_NAME"
+                    env TRACE=true ./scripts/check-version "$GITHUB_REF_NAME"
 
             -   name: Set up QEMU
                 uses: docker/setup-qemu-action@v3

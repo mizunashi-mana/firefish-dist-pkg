@@ -8,8 +8,6 @@ LIVE_DIR="$(cd "$1" && pwd)"
 
 rsync --recursive --relative --links \
     custom \
-    .node-version \
-    .npmrc \
     animated.svg \
     package.json \
     patrons.json \

@@ -1,3 +1,9 @@
+firefish (20240206-d202402240001+release) unstable; urgency=medium
+
+  * Upstream Release Note: https://firefish.dev/firefish/firefish/-/releases/v20240206
+
+ -- Mizunashi Mana <contact@mizunashi.work>  Mon, 04 Dec 2023 09:00:47 +0900
+
 firefish (1.0.5+rc-d202312060003+release) unstable; urgency=medium
 
   * Renewal release of Debian packaging.

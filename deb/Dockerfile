@@ -19,6 +19,7 @@ COPY deb/scripts "${WORK_DIR}/scripts"
 COPY common "${WORK_DIR}/common"
 COPY deb/files "${WORK_DIR}/files"
 COPY deb/Makefile "${WORK_DIR}/Makefile"
+COPY deb/config.env "${WORK_DIR}/pkg/firefish-${PKG_VERSION_DEB_MAIN}/dev/config.env"
 
 RUN <<EOT
 scripts/install-build-deps
@@ -65,6 +66,8 @@ rm -rf \
     "${WORK_DIR}/scripts" \
     /var/lib/apt/lists/*
 EOT
+
+RUN psql --user=${POSTGRES_USER} --host=postgres --dbname=${POSTGRES_DB} --command='CREATE EXTENSION IF NOT EXISTS pgroonga;'
 
 USER firefish
 WORKDIR /var/lib/firefish/live/packages/backend

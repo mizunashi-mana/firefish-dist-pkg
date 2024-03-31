@@ -25,7 +25,7 @@ services:
             - redis-data:/data
 
     postgres:
-        image: docker.io/postgres:15-alpine
+        image: docker.io/groonga/pgroonga:3.1.8-alpine-15-slim
         networks:
             - internal-net
         env_file:

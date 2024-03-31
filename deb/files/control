@@ -8,7 +8,7 @@ Build-Depends:
   rsync,
   nodejs (>= 20.0.0),
 Standards-Version: 4.6.2
-Homepage: https://joinfirefish.org/
+Homepage: https://firefish.dev/
 Vcs-Git: https://github.com/mizunashi-mana/firefish-dist-pkg.git
 Vcs-browser: https://github.com/mizunashi-mana/firefish-dist-pkg
 

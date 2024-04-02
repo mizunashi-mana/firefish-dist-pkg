@@ -3,8 +3,8 @@
 set -euo pipefail
 [ "${TRACE:-false}" = 'true' ] && set -x
 
-WORKDIR=/var/lib/firefish/live/packages/backend
+WORKDIR=/var/lib/firefish/live/packages
 cd "$WORKDIR"
 
 npx typeorm migration:run --dataSource ormconfig.js
-./native-utils/built/migration up
+./backend-rs/built/migration up

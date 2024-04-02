@@ -29,13 +29,13 @@ rsync --recursive --relative --links \
     packages/backend/migration \
     packages/backend/built \
     packages/backend/node_modules \
-    packages/backend/native-utils/package.json \
-    packages/backend/native-utils/Cargo.toml \
-    packages/backend/native-utils/Cargo.lock \
-    packages/backend/native-utils/cargo-licenses.html \
-    packages/backend/native-utils/npm \
-    packages/backend/native-utils/built \
-    packages/backend/native-utils/node_modules \
+    packages/backend-rs/package.json \
+    packages/backend-rs/Cargo.toml \
+    packages/backend-rs/Cargo.lock \
+    packages/backend-rs/cargo-licenses.html \
+    packages/backend-rs/npm \
+    packages/backend-rs/built \
+    packages/backend-rs/node_modules \
     packages/firefish-js/package.json \
     packages/firefish-js/LICENSE \
     packages/firefish-js/README.md \

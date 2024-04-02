@@ -9,6 +9,7 @@ apt-get install -y \
     dh-make \
     make \
     rsync \
+    postgresql-client-15 \
 
 wget -q -O- 'https://deb.nodesource.com/gpgkey/nodesource.gpg.key' \
     | gpg --dearmor | tee /usr/share/keyrings/nodesource.gpg >/dev/null

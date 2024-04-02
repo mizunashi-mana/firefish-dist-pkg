@@ -41,7 +41,7 @@ rm -rf \
     ~/.cache \
     ~/.cargo \
     ~/.rustup \
-    pkg/firefish-*/packages/backend/native-utils/target \
+    pkg/firefish-*/packages/backend-rs/target \
     /var/lib/apt/lists/*
 EOT
 

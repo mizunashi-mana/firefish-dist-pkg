@@ -19,7 +19,7 @@ COPY deb/scripts "${WORK_DIR}/scripts"
 COPY common "${WORK_DIR}/common"
 COPY deb/files "${WORK_DIR}/files"
 COPY deb/Makefile "${WORK_DIR}/Makefile"
-COPY deb/config.env "${WORK_DIR}/pkg/firefish-${PKG_VERSION_DEB_MAIN}/dev/config.env"
+COPY deb/config.env "${WORK_DIR}/pkg/firefish-${FIREFISH_VERSION}/dev/config.env"
 
 RUN <<EOT
 scripts/install-build-deps

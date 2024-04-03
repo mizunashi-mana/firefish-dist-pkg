@@ -14,7 +14,6 @@ services:
         networks:
             - internal-net
         env_file:
-            - ./docker/firefish.env
             - ./docker/postgres.env
         volumes:
             - ./docker/firefish_config.yml:/etc/firefish/config.yml:ro

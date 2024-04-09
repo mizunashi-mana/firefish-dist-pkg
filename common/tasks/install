@@ -15,18 +15,16 @@ rsync --recursive --relative --links \
     pnpm-workspace.yaml \
     release.json \
     title.svg \
-    CHANGELOG.md \
     COPYING \
     LICENSE \
     README.md \
-    RELEASE_NOTES.md \
     SECURITY.md \
     built \
     node_modules \
+    docs/api-change.md \
+    docs/changelog.md \
     packages/backend/package.json \
-    packages/backend/ormconfig.js \
     packages/backend/assets \
-    packages/backend/migration \
     packages/backend/built \
     packages/backend/node_modules \
     packages/backend-rs/package.json \

@@ -17,7 +17,6 @@ Architecture: any
 Depends:
   nodejs (>= 20.0.0),
   ffmpeg,
-  libvips,
   ${misc:Depends},
 Suggests:
   postgresql,

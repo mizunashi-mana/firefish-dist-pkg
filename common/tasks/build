@@ -12,6 +12,7 @@ pnpm run build
 rm -rf node_modules
 pnpm i --force --prod --frozen-lockfile
 
+# Generate the license file
 (cd packages/backend-rs && cargo about init)
 tee packages/backend-rs/about.toml <<EOS
 accepted = [

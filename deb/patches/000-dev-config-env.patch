@@ -1,8 +1,0 @@
-diff --git a/dev/config.env b/dev/config.env
---- /dev/null
-+++ b/dev/config.env
-@@ -0,0 +1,4 @@
-+COMPOSE='docker compose'
-+POSTGRES_DB=firefish
-+POSTGRES_USER=example-firefish-user
-+POSTGRES_PASSWORD=example-firefish-pass

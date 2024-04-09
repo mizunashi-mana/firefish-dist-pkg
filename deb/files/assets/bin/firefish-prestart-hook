@@ -3,8 +3,6 @@
 set -euo pipefail
 [ "${TRACE:-false}" = 'true' ] && set -x
 
-psql --user=${POSTGRES_USER} --host=postgres --dbname=${POSTGRES_DB} --command='CREATE EXTENSION IF NOT EXISTS pgroonga;'
-
 if [ "${RUN_MIGRATION_ON_START:-false}" = 'true' ]; then
     /usr/bin/firefish-migrate
 fi

@@ -9,12 +9,11 @@ services:
         depends_on:
             - redis
             - postgres
+            - postgres-setup
         ports:
             - "3000:3000"
         networks:
             - internal-net
-        env_file:
-            - ./docker/postgres.env
         volumes:
             - ./docker/firefish_config.yml:/etc/firefish/config.yml:ro
             - firefish-files:/var/lib/firefish/files
@@ -27,13 +26,26 @@ services:
             - redis-data:/data
 
     postgres:
-        image: docker.io/groonga/pgroonga:3.1.8-alpine-15-slim
+        image: docker.io/groonga/pgroonga:3.1.9-alpine-16-slim
         networks:
             - internal-net
         env_file:
             - ./docker/postgres.env
         volumes:
             - postgres-data:/var/lib/postgresql/data
+
+    postgres-setup:
+        build:
+            context: ./docker/postgres-setup
+        image: ghcr.io/mizunashi-mana/firefish-dist-pkg/postgres-setup-runner
+        networks:
+            - internal-net
+        depends_on:
+            - postgres
+        env_file:
+            - ./docker/postgres.env
+        environment:
+            - POSTGRES_HOST=postgres
 
 networks:
     internal-net:

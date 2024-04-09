@@ -23,6 +23,7 @@ override_dh_auto_install:
 	./debian/common_tasks/install '$(DEB_DESTDIR)/var/lib/firefish/live'
 
 override_dh_auto_clean:
+	dh_auto_clean
 	find . -maxdepth 4 -name node_modules -type d -exec rm -rf {} +
 	find . -maxdepth 4 -name built -type d -exec rm -rf {} +
 	rm -rf \

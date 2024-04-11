@@ -1,6 +1,6 @@
-Bug-Database: https://git.joinfirefish.org/firefish/firefish/-/issues
-Bug-Submit: https://git.joinfirefish.org/firefish/firefish/-/issues/new
-Changelog: https://git.joinfirefish.org/firefish/firefish/-/blob/main/RELEASE_NOTES.md
-Documentation: https://joinfirefish.org/
-Repository-Browse: https://git.joinfirefish.org/firefish/firefish
-Repository: https://git.joinfirefish.org/firefish/firefish.git
+Bug-Database: https://firefish.dev/firefish/firefish/-/issues
+Bug-Submit: https://firefish.dev/firefish/firefish/-/issues/new
+Changelog: https://firefish.dev/firefish/firefish/-/blob/develop/docs/changelog.md
+Documentation: https://firefish.dev/firefish/firefish/-/tree/develop/docs
+Repository-Browse: https://firefish.dev/firefish/firefish
+Repository: https://firefish.dev/firefish/firefish.git

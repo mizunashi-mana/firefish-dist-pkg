@@ -12,8 +12,9 @@ pnpm run build
 rm -rf node_modules
 pnpm i --force --prod --frozen-lockfile
 
-(cd packages/backend/native-utils && cargo about init)
-tee packages/backend/native-utils/about.toml <<EOS
+# Generate the license file
+(cd packages/backend-rs && cargo about init)
+tee packages/backend-rs/about.toml <<EOS
 accepted = [
     "Apache-2.0",
     "BSD-2-Clause",
@@ -26,4 +27,4 @@ accepted = [
     "Unicode-DFS-2016",
 ]
 EOS
-(cd packages/backend/native-utils && cargo about generate about.hbs > cargo-licenses.html)
+(cd packages/backend-rs && cargo about generate about.hbs > cargo-licenses.html)

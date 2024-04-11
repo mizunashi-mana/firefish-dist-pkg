@@ -43,6 +43,10 @@ url: https://example.com/
 # The port that your Firefish server should listen on.
 port: 3000
 
+# The bind host your Firefish server should listen on.
+# If unspecified, the wildcard address will be used.
+#bind: 127.0.0.1
+
 #   ┌──────────────────────────┐
 #───┘ PostgreSQL configuration └────────────────────────────────
 
@@ -95,28 +99,6 @@ redis:
   #prefix: example-prefix
   #db: 1
 
-# Please configure either MeiliSearch *or* Sonic.
-# If both MeiliSearch and Sonic configurations are present, MeiliSearch will take precedence.
-
-#   ┌───────────────────────────┐
-#───┘ MeiliSearch configuration └─────────────────────────────────────
-#meilisearch:
-#  host: meilisearch
-#  port: 7700
-#  ssl: false
-#  apiKey:
-
-#   ┌─────────────────────┐
-#───┘ Sonic configuration └─────────────────────────────────────
-
-#sonic:
-#  host: localhost
-#  port: 1491
-#  auth: SecretPassword
-#  collection: notes
-#  bucket: default
-
-
 #   ┌───────────────┐
 #───┘ ID generation └───────────────────────────────────────────
 
@@ -153,11 +135,11 @@ reservedUsernames: [
 # Whether disable HSTS
 #disableHsts: true
 
-# Number of worker processes
-#clusterLimit: 1
-
-# Worker only mode
-#onlyQueueProcessor: 1
+# Number of worker processes by type.
+# The sum must not exceed the number of available cores.
+#clusterLimits:
+#  web: 1
+#  queue: 1
 
 # Job concurrency per worker
 # deliverJobConcurrency: 128
@@ -171,8 +153,22 @@ reservedUsernames: [
 # deliverJobMaxAttempts: 12
 # inboxJobMaxAttempts: 8
 
+# Local address used for outgoing requests
+#outgoingAddress: 127.0.0.1
+
 # IP address family used for outgoing request (ipv4, ipv6 or dual)
 #outgoingAddressFamily: ipv4
+
+# Log Option
+# Production env: ['error', 'success', 'warning', 'info']
+# Debug/Test env or Troubleshooting: ['error', 'success', 'warning', 'debug' ,'info']
+# Production env which storage space or IO is tight: ['error', 'warning']
+logLevel: [
+  'error',
+  'success',
+  'warning',
+  'info'
+]
 
 # Syslog option
 #syslog:

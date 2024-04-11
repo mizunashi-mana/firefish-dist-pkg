@@ -1,7 +1,7 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Source: https://git.joinfirefish.org/firefish/firefish
+Source: https://firefish.dev/firefish/firefish
 Upstream-Name: firefish
-Upstream-Contact: info@firefish.social
+Upstream-Contact: https://firefish.dev/firefish/firefish
 
 Files:
  var/lib/firefish/live/*

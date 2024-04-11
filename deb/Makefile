@@ -30,6 +30,7 @@ $(PKG_FILES_DIR): $(SOURCE_TARBALL)
 	rm -rf '$@'
 	mkdir -p '$@'
 	tar zxf '$<' --strip-components 1 -C '$@'
+	rm -rf '$@/Makefile'
 
 $(DEBIAN_FILES_DIR): scripts/create-debian-files files $(PKG_FILES_DIR)
 	$< $@

@@ -55,11 +55,11 @@ db:
   port: 5432
   #ssl: false
   # Database name
-  db: firefish
+  db: firefish_db
 
   # Auth
-  user: example-firefish-user
-  pass: example-firefish-pass
+  user: firefish
+  pass: password
 
   # Whether disable Caching queries
   #disableCache: true
@@ -98,28 +98,6 @@ redis:
   #pass: example-pass
   #prefix: example-prefix
   #db: 1
-
-# Please configure either MeiliSearch *or* Sonic.
-# If both MeiliSearch and Sonic configurations are present, MeiliSearch will take precedence.
-
-#   ┌───────────────────────────┐
-#───┘ MeiliSearch configuration └─────────────────────────────────────
-#meilisearch:
-#  host: meilisearch
-#  port: 7700
-#  ssl: false
-#  apiKey:
-
-#   ┌─────────────────────┐
-#───┘ Sonic configuration └─────────────────────────────────────
-
-#sonic:
-#  host: localhost
-#  port: 1491
-#  auth: SecretPassword
-#  collection: notes
-#  bucket: default
-
 
 #   ┌───────────────┐
 #───┘ ID generation └───────────────────────────────────────────
@@ -181,6 +159,17 @@ reservedUsernames: [
 # IP address family used for outgoing request (ipv4, ipv6 or dual)
 #outgoingAddressFamily: ipv4
 
+# Log Option
+# Production env: ['error', 'success', 'warning', 'info']
+# Debug/Test env or Troubleshooting: ['error', 'success', 'warning', 'debug' ,'info']
+# Production env which storage space or IO is tight: ['error', 'warning']
+logLevel: [
+  'error',
+  'success',
+  'warning',
+  'info'
+]
+
 # Syslog option
 #syslog:
 #  host: localhost
@@ -205,9 +194,6 @@ reservedUsernames: [
 
 # Proxy remote files (default: false)
 #proxyRemoteFiles: true
-
-# Use authorized fetch for outgoing requests
-signToActivityPubGet: true
 
 #allowedPrivateNetworks: [
 #  '127.0.0.1/32'

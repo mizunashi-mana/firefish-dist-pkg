@@ -6,5 +6,4 @@ set -euo pipefail
 WORKDIR=/var/lib/firefish/live/packages/backend
 cd "$WORKDIR"
 
-npx typeorm migration:run --dataSource ormconfig.js
-./native-utils/built/migration up
+npx typeorm migration:run --dataSource built/ormconfig.js

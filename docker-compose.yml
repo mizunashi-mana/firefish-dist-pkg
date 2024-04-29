@@ -1,0 +1,53 @@
+version: "3"
+
+services:
+    firefish:
+        build: .
+        image: ghcr.io/mizunashi-mana/firefish-dist-pkg/runner
+        depends_on:
+            redis:
+                condition: service_healthy
+            postgres:
+                condition: service_healthy
+        ports:
+            - "3000:3000"
+        networks:
+            - internal-net
+        volumes:
+            - ./docker/firefish-config.yml:/etc/firefish/config.yml:ro
+            - firefish-files:/var/lib/firefish/files
+
+    redis:
+        image: docker.io/redis:7.0-alpine
+        networks:
+            - internal-net
+        volumes:
+            - redis-data:/data
+        healthcheck:
+            test: redis-cli ping
+            interval: 5s
+            timeout: 5s
+            retries: 5
+
+    postgres:
+        image: docker.io/groonga/pgroonga:3.1.9-alpine-16-slim
+        networks:
+            - internal-net
+        env_file:
+            - ./docker/postgres.env
+        volumes:
+            - postgres-data:/var/lib/postgresql/data
+            - ./docker/pgroonga-extensions.sql:/docker-entrypoint-initdb.d/pgroonga-extensions.sql
+        healthcheck:
+            test: pg_isready --user="$${POSTGRES_USER}" --dbname="$${POSTGRES_DB}"
+            interval: 5s
+            timeout: 5s
+            retries: 5
+
+networks:
+    internal-net:
+
+volumes:
+    redis-data:
+    postgres-data:
+    firefish-files:

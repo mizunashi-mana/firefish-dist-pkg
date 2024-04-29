@@ -1,0 +1,7 @@
+include envs/params.make
+
+PKG_VERSION_FIREFISH?=20240424
+
+FIREFISH_SOURCE_GIT_REPO?=https://firefish.dev/firefish/firefish
+FIREFISH_SOURCE_GIT_COMMIT_REF?=v$(PKG_VERSION_FIREFISH)
+

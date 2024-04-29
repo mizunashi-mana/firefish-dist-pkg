@@ -1,0 +1,27 @@
+firefish (20240424-d202404280001+release) unstable; urgency=medium
+
+  * Upstream Release Note: https://firefish.dev/firefish/firefish/-/blob/v20240421/docs/changelog.md
+
+ -- Mizunashi Mana <contact@mizunashi.work>  Mon, 28 Apr 2024 17:00:00 +0900
+
+firefish (20240330-d202404010001+release) unstable; urgency=high
+
+  * Fix bugs (including a critical security issue).
+  * Upstream Release Note: https://firefish.dev/firefish/firefish/-/blob/v20240330/docs/changelog.md
+
+ -- Mizunashi Mana <contact@mizunashi.work>  Mon, 01 Apr 2024 02:00:00 +0900
+
+firefish (20240206-d202402240001+release) unstable; urgency=medium
+
+  * Upstream Release Note: https://firefish.dev/firefish/firefish/-/releases/v20240206
+
+ -- Mizunashi Mana <contact@mizunashi.work>  Mon, 04 Dec 2023 09:00:47 +0900
+
+firefish (1.0.5+rc-d202312060003+release) unstable; urgency=medium
+
+  * Renewal release of Debian packaging.
+  * Use dh-make and change version policy.
+  * Change the config path (/etc/firefish/default.yml -> /etc/firefish/config.yml).
+  * Upstream Release Note: https://git.joinfirefish.org/firefish/firefish/-/releases/v1.0.5-rc
+
+ -- Mizunashi Mana <contact@mizunashi.work>  Mon, 04 Dec 2023 09:00:47 +0900

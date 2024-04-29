@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+[ "${TRACE:-false}" = 'true' ] && set -x
+
+TARGET_URL="${TARGET_URL:-http://localhost:3000}"
+
+for i in `seq 1 130`; do
+    if curl --fail -sL "$TARGET_URL"; then
+        break
+    fi
+    sleep 2
+done
+
+HOME_HTML="$(curl --fail -sL "$TARGET_URL")"
+if ! echo "$HOME_HTML" | grep 'Thank you for using Firefish!' >/dev/null; then
+    echo 'Failed to find "Thank you for using Firefish!" in home page'
+    echo "$HOME_HTML"
+    exit 1
+fi

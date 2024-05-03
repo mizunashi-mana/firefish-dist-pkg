@@ -85,6 +85,7 @@ jobs:
                         ./dest/*.deb
                         ./dest/*.changes
                         ./dest/*.buildinfo
+                        ./dest/*.dsc
 
             -   name: Build compose images
                 uses: docker/bake-action@v4
@@ -143,3 +144,4 @@ jobs:
                         *.deb
                         *.changes
                         *.buildinfo
+                        *.dsc

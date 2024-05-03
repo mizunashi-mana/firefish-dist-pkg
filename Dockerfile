@@ -52,6 +52,7 @@ FROM base AS debcontainer
 COPY --from=builder "${WORK_DIR}/pkg/*.deb" "${WORK_DIR}/dest/"
 COPY --from=builder "${WORK_DIR}/pkg/*.changes" "${WORK_DIR}/dest/"
 COPY --from=builder "${WORK_DIR}/pkg/*.buildinfo" "${WORK_DIR}/dest/"
+COPY --from=builder "${WORK_DIR}/pkg/*.dsc" "${WORK_DIR}/dest/"
 
 FROM base AS runner
 

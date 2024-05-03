@@ -13,17 +13,14 @@ jobs:
         strategy:
             matrix:
                 include:
+                    -   distro_base: "ubuntu"
+                        distro: "noble"
+                        arch: amd64
                     -   distro_base: "debian"
                         distro: "bookworm"
                         arch: amd64
                     -   distro_base: "ubuntu"
                         distro: "jammy"
-                        arch: amd64
-                    -   distro_base: "debian"
-                        distro: "bullseye"
-                        arch: amd64
-                    -   distro_base: "ubuntu"
-                        distro: "focal"
                         arch: amd64
 
         steps:

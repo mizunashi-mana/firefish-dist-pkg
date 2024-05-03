@@ -20,8 +20,9 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y \
     git \
     build-essential \
     nodejs \
+    libmimalloc-dev
 
-cargo install cargo-about
+cargo install cargo-about@0.6.1
 
 corepack enable
 corepack prepare --activate pnpm

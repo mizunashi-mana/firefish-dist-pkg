@@ -34,6 +34,7 @@ apt-get remove -y \
     rsync \
     nodejs \
     build-essential \
+    libmimalloc-dev \
 
 apt-get autoremove -y
 apt-get clean

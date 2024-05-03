@@ -71,7 +71,7 @@ jobs:
             -   name: Test deb version
                 if: startsWith(github.ref, 'refs/tags/')
                 run: |
-                    env TRACE=true ./scripts/test-version "$GITHUB_REF_NAME" ./dest/*.deb
+                    env TRACE=true ./tests/test-version "$GITHUB_REF_NAME" ./dest/*.deb
 
             -   name: Archive deb artifact
                 uses: actions/upload-artifact@v3
@@ -82,6 +82,7 @@ jobs:
                         ./dest/*.deb
                         ./dest/*.changes
                         ./dest/*.buildinfo
+                        ./dest/*.debian.tar.*
 
             -   name: Build compose images
                 uses: docker/bake-action@v4
@@ -140,3 +141,4 @@ jobs:
                         *.deb
                         *.changes
                         *.buildinfo
+                        *.debian.tar.*

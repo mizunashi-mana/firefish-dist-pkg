@@ -52,6 +52,7 @@ FROM base AS debcontainer
 COPY --from=builder "${WORK_DIR}/pkg/*.deb" "${WORK_DIR}/dest/"
 COPY --from=builder "${WORK_DIR}/pkg/*.changes" "${WORK_DIR}/dest/"
 COPY --from=builder "${WORK_DIR}/pkg/*.buildinfo" "${WORK_DIR}/dest/"
+COPY --from=builder "${WORK_DIR}/pkg/*.debian.tar.*" "${WORK_DIR}/dest/"
 
 FROM base AS runner
 
@@ -71,7 +72,6 @@ rm -rf \
     /var/lib/apt/lists/*
 EOT
 
-RUN adduser --system firefish
 USER firefish
 
 WORKDIR /var/lib/firefish/live/packages/backend

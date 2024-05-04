@@ -44,21 +44,27 @@ rm -rf \
 )
 
 yes y | pnpm install --force --frozen-lockfile
-cargo fetch
-cargo vendor vendor/cargo
+
+find . -path '*/node_modules/*' -delete
+find . -name 'node_modules' -type d -delete
+
 cargo about init
 
 (
     cd "$PROJECT_DIR/configs" && rsync --recursive --relative --links \
-        .cargo/config.toml \
         about.toml \
         "${TARGET_DIR}/"
 )
 
 cargo about generate --output-file cargo-licenses.html about.hbs
 
-rm -rf \
-    node_modules \
-    packages/*/node_modules \
+cargo fetch --locked
+cargo vendor vendor/cargo
+
+(
+    cd "$PROJECT_DIR/configs" && rsync --recursive --relative --links \
+        .cargo/config.toml \
+        "${TARGET_DIR}/"
+)
 
 tar -C "$TEMP_DIR" -czf "$TARGET_FILE" "firefish-$SOURCE_GIT_REVISION"

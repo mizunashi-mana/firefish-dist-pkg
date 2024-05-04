@@ -1,0 +1,1 @@
+https://github.com/mizunashi-mana/firefish-dist-pkg/releases/download/v1.0.5%2Brc-d202312060003%2Brelease/ubuntu-jammy-amd64_firefish.deb

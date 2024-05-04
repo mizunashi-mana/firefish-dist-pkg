@@ -2,8 +2,8 @@
 
 include envs/common.make
 
-SOURCE_TARBALL=pkg/firefish_$(PKG_VERSION_DEB).orig.tar.gz
-PKG_FILES_DIR=pkg/firefish-$(PKG_VERSION_DEB)
+SOURCE_TARBALL=pkg/firefish_$(PKG_VERSION_DEB_MAIN).orig.tar.gz
+PKG_FILES_DIR=pkg/firefish-$(PKG_VERSION_DEB_MAIN)
 
 .PHONY: all
 all: deb

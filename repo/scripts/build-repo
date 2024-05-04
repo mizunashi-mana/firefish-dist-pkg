@@ -9,5 +9,9 @@ PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 SOURCE_DIR="$1"
 
 aptly repo create firefish
-aptly repo add firefish "$SOURCE_DIR"/*.deb
+
+for deb_file in "$SOURCE_DIR"/*.deb; do
+    aptly repo add firefish "$deb_file"
+done
+
 

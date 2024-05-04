@@ -1,6 +1,7 @@
 /tmp/
 /pkg/
 /dest/
+VERSION.txt
 
 # build
 .stamp.*

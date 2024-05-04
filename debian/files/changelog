@@ -1,3 +1,10 @@
+firefish (20240430-d202405040001+release) unstable; urgency=high
+
+  * Include critical security fixes
+  * Upstream Release Note: https://firefish.dev/firefish/firefish/-/blob/v20240430/docs/changelog.md
+
+ -- Mizunashi Mana <contact@mizunashi.work>  Sat, 04 May 2024 17:00:00 +0900
+
 firefish (20240424-d202404280001+release) unstable; urgency=medium
 
   * Upstream Release Note: https://firefish.dev/firefish/firefish/-/blob/v20240421/docs/changelog.md

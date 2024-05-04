@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+set -eu
+[ "${TRACE:-false}" = 'true' ] && set -x
+
+cd "$1"
+
+yes y | pnpm install --offline --force --frozen-lockfile
+pnpm run build
+
+# Trim down the dependencies to only those for production
+rm -rf node_modules
+yes y | pnpm install --offline --force --prod --frozen-lockfile

@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+[ "${TRACE:-false}" = 'true' ] && set -x
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+
+cd "$1"
+
+DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    dh-make \
+    rsync \
+    build-essential \
+    nodejs \
+
+dpkg-buildpackage -rootcmd=fakeroot

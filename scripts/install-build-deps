@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+[ "${TRACE:-false}" = 'true' ] && set -x
+
+apt-get update -y
+DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    wget \
+    make \
+
+wget -O /tmp/nodejs-setup.bash https://deb.nodesource.com/setup_20.x
+bash /tmp/nodejs-setup.bash
+
+apt-get update -y
+
+wget -O /tmp/rustup-init.bash https://sh.rustup.rs
+bash /tmp/rustup-init.bash -y \
+  --no-modify-path \
+  --profile minimal \
+  --default-toolchain stable
+source "$HOME/.cargo/env"
+rustup self update
+rustup update

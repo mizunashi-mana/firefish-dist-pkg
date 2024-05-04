@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+[ "${TRACE:-false}" = 'true' ] && set -x
+
+apt-get update -y
+
+INSTALL_DEPS=(wget gpg)
+apt-get install -y "${INSTALL_DEPS[@]}"
+
+wget -O /tmp/nodejs-setup.bash https://deb.nodesource.com/setup_20.x
+bash /tmp/nodejs-setup.bash
+
+apt-get remove -y "${INSTALL_DEPS[@]}"
+
+apt-get update -y
+apt-get install -y "${DEB_FILE}"

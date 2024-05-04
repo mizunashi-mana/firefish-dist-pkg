@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+[ "${TRACE:-false}" = 'true' ] && set -x
+
+mkdir -p "$1"
+LIVE_DIR="$(cd "$1" && pwd)"
+
+rsync --recursive --relative --links \
+    custom \
+    animated.svg \
+    package.json \
+    patrons.json \
+    pnpm-lock.yaml \
+    pnpm-workspace.yaml \
+    Cargo.toml \
+    Cargo.lock \
+    release.json \
+    title.svg \
+    COPYING \
+    LICENSE \
+    README.md \
+    SECURITY.md \
+    cargo-licenses.html \
+    built \
+    node_modules \
+    docs/api-change.md \
+    docs/changelog.md \
+    packages/backend/package.json \
+    packages/backend/assets \
+    packages/backend/built \
+    packages/backend/node_modules \
+    packages/backend-rs/package.json \
+    packages/backend-rs/Cargo.toml \
+    packages/backend-rs/npm \
+    packages/backend-rs/built \
+    packages/backend-rs/node_modules \
+    packages/firefish-js/package.json \
+    packages/firefish-js/LICENSE \
+    packages/firefish-js/README.md \
+    packages/firefish-js/built \
+    packages/firefish-js/node_modules \
+    packages/megalodon/package.json \
+    packages/megalodon/node_modules \
+    packages/megalodon/lib \
+    "${LIVE_DIR}/"

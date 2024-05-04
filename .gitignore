@@ -1,4 +1,6 @@
 /tmp/
+/pkg/
+/dest/
 
 # build
 .stamp.*

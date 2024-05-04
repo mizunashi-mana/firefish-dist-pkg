@@ -1,3 +1,0 @@
-debian/common_assets/config.yml etc/firefish
-debian/assets/bin/firefish-migrate usr/bin
-debian/assets/bin/firefish-prestart-hook usr/bin

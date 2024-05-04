@@ -1,17 +1,26 @@
-# Distribution Packages of Firefish
+# Debian Package Repository of Firefish
 
 Free to install dev dependencies, build with Rust and use pm2. Run by systemd with security sandbox.
 
-## Debian / Ubuntu
+## How to Use
 
-Currently, supports amd64 (x86_64) architecture only.
+WIP
 
-How to run:
+## How to Build Package
 
-1. Install nodejs v20: https://github.com/nodesource/distributions#debinstall
-2. Download deb from https://github.com/mizunashi-mana/firefish-dist-pkg/releases.
-3. Install deb by `apt install ./*_firefish.deb`.
-4. Edit `/etc/firefish/config.yml` and restart firefish by `systemctl restart firefish`.
+```
+docker build \
+    --target debcontainer \
+    --tag ghcr.io/mizunashi-mana/firefish-dist-pkg/debcontainer \
+    .
+docker create --name deb ghcr.io/mizunashi-mana/firefish-dist-pkg/debcontainer
+docker cp deb:/workdir/dest ./dest
+docker rm deb
+```
+
+## How to Build Repository
+
+WIP
 
 ## License Notice
 

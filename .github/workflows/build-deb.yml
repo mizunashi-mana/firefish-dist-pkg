@@ -13,17 +13,14 @@ jobs:
         strategy:
             matrix:
                 include:
+                    -   distro_base: "ubuntu"
+                        distro: "noble"
+                        arch: amd64
                     -   distro_base: "debian"
                         distro: "bookworm"
                         arch: amd64
                     -   distro_base: "ubuntu"
                         distro: "jammy"
-                        arch: amd64
-                    -   distro_base: "debian"
-                        distro: "bullseye"
-                        arch: amd64
-                    -   distro_base: "ubuntu"
-                        distro: "focal"
                         arch: amd64
 
         steps:
@@ -33,7 +30,7 @@ jobs:
             -   name: Check package version
                 if: startsWith(github.ref, 'refs/tags/')
                 run: |
-                    env TRACE=true ./scripts/check-version "$GITHUB_REF_NAME"
+                    env TRACE=true ./tests/check-version "$GITHUB_REF_NAME"
 
             -   name: Set up QEMU
                 uses: docker/setup-qemu-action@v3
@@ -49,20 +46,20 @@ jobs:
             -   name: Build deb
                 uses: docker/build-push-action@v5
                 with:
-                    file: ./deb/Dockerfile
+                    file: ./Dockerfile
                     load: true
                     target: debcontainer
                     build-args: |
                         DISTRO_BASE=${{ matrix.distro_base }}
                         DISTRO=${{ matrix.distro }}
                     platforms: ${{ steps.docker_setup_buildx.outputs.platforms }}
-                    tags: ghcr.io/mizunashi-mana/firefish-dist-pkg/debian-debcontainer
+                    tags: ghcr.io/mizunashi-mana/firefish-dist-pkg/debcontainer
                     cache-from: type=gha
                     cache-to: type=gha
 
             -   name: Copy deb
                 run: |
-                    docker create --name deb ghcr.io/mizunashi-mana/firefish-dist-pkg/debian-debcontainer
+                    docker create --name deb ghcr.io/mizunashi-mana/firefish-dist-pkg/debcontainer
                     docker cp deb:/workdir/dest ./dest
                     docker rm deb
                     for file in $(find ./dest -type f); do
@@ -74,7 +71,7 @@ jobs:
             -   name: Test deb version
                 if: startsWith(github.ref, 'refs/tags/')
                 run: |
-                    env TRACE=true ./deb/scripts/test-version "$GITHUB_REF_NAME" ./dest/*.deb
+                    env TRACE=true ./tests/test-version "$GITHUB_REF_NAME" ./dest/*.deb
 
             -   name: Archive deb artifact
                 uses: actions/upload-artifact@v3
@@ -83,11 +80,13 @@ jobs:
                     retention-days: 1
                     path: |
                         ./dest/*.deb
+                        ./dest/*.changes
+                        ./dest/*.buildinfo
+                        ./dest/*.debian.tar.*
 
             -   name: Build compose images
                 uses: docker/bake-action@v4
                 with:
-                    workdir: ./deb
                     files: ./docker-compose.yml
                     load: true
                     set: |
@@ -99,16 +98,15 @@ jobs:
 
             -   name: Pull compose images
                 run: |
-                    docker compose --file deb/docker-compose.yml \
-                        pull postgres redis
+                    docker compose --file docker-compose.yml pull \
+                        postgres redis
 
             -   name: Up services and test
                 run: |
-                    docker compose --file deb/docker-compose.yml \
+                    docker compose --file docker-compose.yml \
                         up --detach
-                    sleep 10
-                    env TRACE=true ./deb/scripts/test-service
-                    docker compose --file deb/docker-compose.yml logs
+                    env TRACE=true ./tests/test-service
+                    docker compose --file docker-compose.yml logs
 
     release:
         needs:
@@ -141,3 +139,6 @@ jobs:
                 with:
                     files: |
                         *.deb
+                        *.changes
+                        *.buildinfo
+                        *.debian.tar.*

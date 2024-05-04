@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+
+set -eu
+[ "${TRACE:-false}" = 'true' ] && set -x
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+
+mkdir -p "$(dirname $1)"
+TARGET_FILE="$(cd "$(dirname "$1")" && pwd)/$(basename "$1")"
+
+TEMP_DIR="$(mktemp -d)"
+trap 'rm -rf -- "$TEMP_DIR"' EXIT
+
+TARGET_DIR="$TEMP_DIR/firefish-$SOURCE_GIT_REVISION"
+
+DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    wget \
+    rsync \
+    git \
+    build-essential \
+    nodejs \
+
+cargo install cargo-about@0.6.1
+
+corepack enable
+corepack prepare --activate pnpm
+
+git clone \
+    --depth 1 \
+    --branch "$SOURCE_GIT_REVISION" \
+    "$SOURCE_GIT_REPOSITORY" "$TARGET_DIR"
+
+cd "$TARGET_DIR"
+
+rm -rf \
+    .git \
+    Makefile \
+
+(
+    cd "$PROJECT_DIR/configs" && rsync --recursive --relative --links \
+        .npmrc \
+        "${TARGET_DIR}/"
+)
+
+yes y | pnpm install --force --frozen-lockfile
+cargo fetch
+cargo vendor vendor/cargo
+cargo about init
+
+(
+    cd "$PROJECT_DIR/configs" && rsync --recursive --relative --links \
+        .cargo/config.toml \
+        about.toml \
+        "${TARGET_DIR}/"
+)
+
+cargo about generate --output-file cargo-licenses.html about.hbs
+
+rm -rf \
+    node_modules \
+    packages/*/node_modules \
+
+tar -C "$TEMP_DIR" -czf "$TARGET_FILE" "firefish-$SOURCE_GIT_REVISION"

@@ -7,7 +7,6 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 
 GITHUB_TAG_NAME="$1"
-PKG_VERSION_MAIN="$(echo "$GITHUB_TAG_NAME" | sed -E 's/^v([^-]+)-.*$/\1/')"
 
-make VERSION.txt
-[ "$(cat "$PROJECT_DIR/deb/VERSION.txt")" = "$PKG_VERSION_MAIN" ]
+make version
+[ "v$(cat "$PROJECT_DIR/VERSION.txt")" = "$GITHUB_TAG_NAME" ]

@@ -6,8 +6,9 @@ set -eu
 cd "$1"
 
 yes y | pnpm install --offline --force --frozen-lockfile
-pnpm run build
+NODE_ENV=production pnpm run --recursive build
+pnpm run gulp
 
 # Trim down the dependencies to only those for production
-rm -rf node_modules
+find . -path '*/node_modules/*' -delete
 yes y | pnpm install --offline --force --prod --frozen-lockfile

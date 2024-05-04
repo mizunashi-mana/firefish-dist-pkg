@@ -5,7 +5,6 @@ set -euo pipefail
 
 GITHUB_TAG_NAME="$1"
 DEB_FILE_PATH="$2"
-PKG_VERSION_DEB="$(echo "$GITHUB_TAG_NAME" | sed -E 's/^v(.+)$/\1/')"
 
 DPKG_DEB_VERSION="$(dpkg-deb --show "$DEB_FILE_PATH" | awk '{print $2}')"
-[ "$DPKG_DEB_VERSION" = "$PKG_VERSION_DEB" ]
+[ "v$DPKG_DEB_VERSION" = "$GITHUB_TAG_NAME" ]

@@ -2,8 +2,6 @@
 
 include envs/common.make
 
-PKG_VERSION_DEB_MAIN=$(subst -,+,$(PKG_VERSION_FIREFISH))
-
 SOURCE_TARBALL=pkg/firefish_$(PKG_VERSION_DEB_MAIN).orig.tar.gz
 PKG_FILES_DIR=pkg/firefish-$(PKG_VERSION_DEB_MAIN)
 
@@ -25,3 +23,7 @@ pkg-files: source
 .PHONY: deb
 deb: pkg-files
 	./scripts/build-deb '$(PKG_FILES_DIR)'
+
+.PHONY: version
+version:
+	echo $(PKG_VERSION_DEB) > VERSION.txt

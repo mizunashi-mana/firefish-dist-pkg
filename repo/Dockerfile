@@ -18,5 +18,3 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y \
 apt-get clean
 rm -rf /var/lib/apt/lists/*
 EOT
-
-COPY scripts/build-repo-by-aptly /usr/local/bin/build-repo-by-aptly

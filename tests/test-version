@@ -3,8 +3,9 @@
 set -euo pipefail
 [ "${TRACE:-false}" = 'true' ] && set -x
 
-GITHUB_TAG_NAME="$1"
-DEB_FILE_PATH="$2"
+DEB_FILE_PATH="$1"
+
+make version
 
 DPKG_DEB_VERSION="$(dpkg-deb --show "$DEB_FILE_PATH" | awk '{print $2}')"
-[ "v$DPKG_DEB_VERSION" = "$GITHUB_TAG_NAME" ]
+[ "$DPKG_DEB_VERSION" = "$(cat VERSION.txt)" ]

@@ -1,4 +1,4 @@
-firefish (20240504-d202405040003+release) unstable; urgency=high
+firefish (20240504-d202405050004+release) unstable; urgency=high
 
   * Include critical security fixes
   * Upstream Release Note: https://firefish.dev/firefish/firefish/-/blob/v20240430/docs/changelog.md

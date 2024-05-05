@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+[ "${TRACE:-false}" = 'true' ] && set -x
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+
+DOCKER_IMAGE_NAME=ghcr.io/mizunashi-mana/firefish-dist-pkg/repo-builder
+
+cd "$PROJECT_DIR"
+
+docker build --tag "$DOCKER_IMAGE_NAME" .
+docker run -it --rm \
+    --volume "$PROJECT_DIR:/workdir" \
+    --workdir /workdir \
+    --env "TRACE=${TRACE:-false}" \
+    "$DOCKER_IMAGE_NAME" \
+    /bin/bash docker/entrypoint.bash

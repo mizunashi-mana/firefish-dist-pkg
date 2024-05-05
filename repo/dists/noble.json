@@ -1,0 +1,9 @@
+{
+    "distribution": "noble",
+    "files": [
+        {
+            "url": "https://github.com/mizunashi-mana/firefish-dist-pkg/releases/download/v20240504-d202405050004%2Brelease/ubuntu-noble-amd64_firefish_20240504-d202405050004+release_amd64.deb",
+            "name": "firefish_20240504-d202405050004+release_amd64.deb"
+        }
+    ]
+}

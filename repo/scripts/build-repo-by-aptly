@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+[ "${TRACE:-false}" = 'true' ] && set -x
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+
+REPO_NAME="${REPO_NAME:-firefish-$(date +%s)}"
+PUBLIC_DIR_ROOT="${PUBLIC_DIR_ROOT:-$HOME/.aptly/public}"
+
+function usage() {
+    echo "Usage: $0 --distribution <distribution> --dest-root <dest-root> --list-file <list-file>"
+}
+
+while [ "$#" -gt 0 ]; do
+    case "$1" in
+        -d | --distribution)
+            DISTRIBUTION="$2"
+            shift 2
+            ;;
+        -o | --dest-root)
+            DEST_DIR_ROOT="$2"
+            shift 2
+            ;;
+        -l | --list-file)
+            LIST_FILE="$2"
+            shift 2
+            ;;
+        --help | -h | -?)
+            usage
+            exit 0
+            ;;
+        *)
+            echo "Unknown option: $1"
+            usage
+            exit 1
+            break
+            ;;
+    esac
+done
+
+TEMP_DIR="$(mktemp -d)"
+trap 'rm -rf "$TEMP_DIR"' EXIT
+
+aptly repo create "$REPO_NAME"
+
+while IFS= read -r deb_url; do
+    if [ -n "$deb_url" ] && ! [[ "$deb_url" =~ ^# ]]; then
+        wget -q -O "$TEMP_DIR/deb_file.deb" "$deb_url"
+        aptly repo add "$REPO_NAME" "$TEMP_DIR/deb_file.deb"
+    fi
+done < <(cat "$LIST_FILE" && echo)
+
+aptly publish repo \
+    -batch \
+    "-distribution=$DISTRIBUTION" \
+    -component=main \
+    "$REPO_NAME" \
+    "./$REPO_NAME"
+cp -r "$PUBLIC_ROOT_DIR/$REPO_NAME/dists/"* "$DEST_ROOT_DIR/dists/"
+
+aptly publish drop "$DISTRIBUTION" "$REPO_NAME"
+aptly repo drop "$REPO_NAME"

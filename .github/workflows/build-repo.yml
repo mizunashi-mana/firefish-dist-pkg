@@ -43,9 +43,9 @@ jobs:
                     ./repo/scripts/build-repo-in-docker
 
             -   name: Upload Pages artifact
-                uses: actions/upload-pages-artifact@v2
+                uses: actions/upload-pages-artifact@v3
                 with:
-                      path: ./repo/dest/
+                      path: repo/dest/
 
     release:
         if: ${{ github.ref_name == 'main' }}

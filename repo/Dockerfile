@@ -15,6 +15,7 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y \
     aptly \
     wget \
     jq \
+    rsync \
 
 apt-get clean
 rm -rf /var/lib/apt/lists/*

@@ -46,3 +46,5 @@ for dist_file in "$DISTS_DIR"/*; do
     --dest-root "$DEST_ROOT_DIR" \
     --passphrase-file "$PASSPHRASE_FILE"
 done
+
+cp -r "$PROJECT_DIR/public/"* "$DEST_ROOT_DIR/"

@@ -41,7 +41,6 @@ jobs:
             -   name: Build repo
                 run: |
                     ./repo/scripts/build-repo-in-docker
-                    cp -r ./repo/public/* ./repo/dest/
 
             -   name: Upload Pages artifact
                 uses: actions/upload-pages-artifact@v3

@@ -67,8 +67,11 @@ aptly publish repo \
     "-component=$COMPONENT" \
     "-passphrase-file=$PASSPHRASE_FILE" \
     "$REPO_NAME"
+
 mkdir -p "$DEST_ROOT_DIR/dists/"
-cp -r "$PUBLIC_ROOT_DIR/dists/"* "$DEST_ROOT_DIR/dists/"
+mkdir -p "$DEST_ROOT_DIR/pool/"
+rsync -r "$PUBLIC_ROOT_DIR/dists/" "$DEST_ROOT_DIR/dists/"
+rsync -r "$PUBLIC_ROOT_DIR/pool/" "$DEST_ROOT_DIR/pool/"
 
 aptly publish drop "$DISTRIBUTION"
 aptly repo drop "$REPO_NAME"

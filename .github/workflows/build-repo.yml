@@ -1,0 +1,46 @@
+name: Build repo
+
+on:
+    push:
+        branches: [ "main" ]
+    pull_request:
+        branches: [ "main" ]
+
+jobs:
+    build-deb:
+        runs-on: ubuntu-latest
+        steps:
+            -   name: Checkout repository
+                uses: actions/checkout@v4
+
+            # TODO: Copy key to deploy
+
+            -   name: Copy deb
+                run: |
+                    ./repo/scripts/build-repo-in-docker
+
+            -   name: Upload Pages artifact
+                uses: actions/upload-pages-artifact@v2
+                with:
+                      path: repo/dest/
+
+#    release:
+#        if: ${{ github.ref_name == 'main' }}
+#
+#        needs:
+#            - "build-repo"
+#
+#        runs-on: ubuntu-latest
+#        steps:
+#            permissions:
+#                pages: write
+#                id-token: write
+#
+#            environment:
+#                name: github-pages
+#                url: ${{ steps.deployment.outputs.page_url }}
+#
+#            steps:
+#                -   name: Deploy to GitHub Pages
+#                    id: deployment
+#                    uses: actions/deploy-pages@v4

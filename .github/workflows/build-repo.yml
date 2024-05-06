@@ -7,13 +7,20 @@ on:
         branches: [ "main" ]
 
 jobs:
-    build-deb:
+    build-repo:
         runs-on: ubuntu-latest
         steps:
             -   name: Checkout repository
                 uses: actions/checkout@v4
 
-            # TODO: Copy key to deploy
+            -   name: Copy signing key
+                if: ${{ github.ref_name == 'main' }}
+                run: |
+                    echo "$GPG_KEY" > ./repo/docker/gpg.key
+                    echo "$GPG_PASS" > ./repo/docker/gpg.pass
+                env:
+                    GPG_KEY: ${{ secrets.APT_REPO_SIGNING_GPG_KEY }}
+                    GPG_PASS: ${{ secrets.APT_REPO_SIGNING_GPG_PASS }}
 
             -   name: Build repo
                 run: |
@@ -24,23 +31,23 @@ jobs:
                 with:
                       path: repo/dest/
 
-#    release:
-#        if: ${{ github.ref_name == 'main' }}
-#
-#        needs:
-#            - "build-repo"
-#
-#        runs-on: ubuntu-latest
-#        steps:
-#            permissions:
-#                pages: write
-#                id-token: write
-#
-#            environment:
-#                name: github-pages
-#                url: ${{ steps.deployment.outputs.page_url }}
-#
-#            steps:
-#                -   name: Deploy to GitHub Pages
-#                    id: deployment
-#                    uses: actions/deploy-pages@v4
+    release:
+        if: ${{ github.ref_name == 'main' }}
+
+        needs:
+            - build-repo
+
+        runs-on: ubuntu-latest
+
+        permissions:
+            pages: write
+            id-token: write
+
+        environment:
+            name: github-pages
+            url: ${{ steps.deployment.outputs.page_url }}
+
+        steps:
+            -   name: Deploy to GitHub Pages
+                id: deployment
+                uses: actions/deploy-pages@v4

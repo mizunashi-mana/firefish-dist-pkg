@@ -9,12 +9,28 @@ on:
 jobs:
     build-repo:
         runs-on: ubuntu-latest
+
+        steps:
+            -   name: Checkout repository
+                uses: actions/checkout@v4
+
+            -   name: Build repo
+                run: |
+                    ./repo/scripts/build-repo-in-docker
+
+    build-repo-to-deploy:
+        if: ${{ github.ref_name == 'main' }}
+
+        runs-on: ubuntu-latest
+
+        environment:
+            name: build-repo-deploy
+
         steps:
             -   name: Checkout repository
                 uses: actions/checkout@v4
 
             -   name: Copy signing key
-                if: ${{ github.ref_name == 'main' }}
                 run: |
                     echo "$GPG_KEY" > ./repo/docker/gpg.key
                     echo "$GPG_PASS" > ./repo/docker/gpg.pass
@@ -29,13 +45,13 @@ jobs:
             -   name: Upload Pages artifact
                 uses: actions/upload-pages-artifact@v2
                 with:
-                      path: repo/dest/
+                      path: ./repo/dest/
 
     release:
         if: ${{ github.ref_name == 'main' }}
 
         needs:
-            - build-repo
+            - build-repo-to-deploy
 
         runs-on: ubuntu-latest
 

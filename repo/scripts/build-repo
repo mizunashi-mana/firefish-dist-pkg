@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+[ "${TRACE:-false}" = 'true' ] && set -x
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+
+SCRIPTS_DIR="$PROJECT_DIR/scripts"
+DISTS_DIR="$PROJECT_DIR/dists"
+
+function usage() {
+    echo "Usage: $0 --passphrase-file PATH"
+}
+
+DEST_ROOT_DIR="$PROJECT_DIR/dest"
+while [ "$#" -gt 0 ]; do
+    case "$1" in
+        -p | --passphrase-file)
+            PASSPHRASE_FILE="$2"
+            shift 2
+            ;;
+        -o | --dest-root)
+            DEST_ROOT_DIR="$2"
+            shift 2
+            ;;
+        --help | -h | -?)
+            usage
+            exit 0
+            ;;
+        *)
+            echo "Unknown option: $1"
+            usage
+            exit 1
+            break
+            ;;
+    esac
+done
+
+mkdir -p "$DEST_ROOT_DIR"
+
+for dist_file in "$DISTS_DIR"/*; do
+  echo "Building $dist_file"
+  "$SCRIPTS_DIR/build-dist-repo" \
+    --list-file "$dist_file" \
+    --dest-root "$DEST_ROOT_DIR" \
+    --passphrase-file "$PASSPHRASE_FILE"
+done

@@ -1,0 +1,13 @@
+{
+    "distribution": "bookworm",
+    "files": [
+        {
+            "url": "https://github.com/mizunashi-mana/firefish-dist-pkg/releases/download/v1.0.5%2Brc-d202312060003%2Brelease/debian-bookworm-amd64_firefish.deb",
+            "name": "firefish_1.0.5+rc-d202312060003+release_amd64.deb"
+        },
+        {
+            "url": "https://github.com/mizunashi-mana/firefish-dist-pkg/releases/download/v20240504-d202405050004%2Brelease/debian-bookworm-amd64_firefish_20240504-d202405050004+release_amd64.deb",
+            "name": "firefish_20240504-d202405050004+release_amd64.deb"
+        }
+    ]
+}

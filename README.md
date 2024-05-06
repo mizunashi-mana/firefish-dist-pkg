@@ -4,6 +4,12 @@ Free to install dev dependencies, build with Rust and use pm2. Run by systemd wi
 
 ## How to Use
 
+### Debian
+
+WIP
+
+### Ubuntu
+
 WIP
 
 ## How to Build Package
@@ -20,7 +26,16 @@ docker rm deb
 
 ## How to Build Repository
 
-WIP
+```
+./repo/scripts/build-repo-in-docker
+npx http-server ./repo/dest
+```
+
+and, use
+
+```
+deb [signed-by=./repo/docker/sample-gpg.key] http://localhost:8080 <dist> main
+```
 
 ## License Notice
 

@@ -55,7 +55,7 @@ cat "$LIST_FILE" | jq -c '.files|.[]' | while IFS= read -r file_entry; do
     deb_name="$(echo "$file_entry" | jq -r '.name')"
     deb_file="$TEMP_DIR/$deb_name"
 
-    wget -O "$deb_file" "$deb_url"
+    wget --no-verbose --show-progress --progress=dot:giga -O "$deb_file" "$deb_url"
     aptly repo add "$REPO_NAME" "$deb_file"
 done
 

@@ -11,7 +11,7 @@ DOCKER_IMAGE_NAME=ghcr.io/mizunashi-mana/firefish-dist-pkg/repo-builder
 cd "$PROJECT_DIR"
 
 docker build --tag "$DOCKER_IMAGE_NAME" .
-docker run -it --rm \
+docker run -i --rm \
     --volume "$PROJECT_DIR:/workdir" \
     --workdir /workdir \
     --env "TRACE=${TRACE:-false}" \

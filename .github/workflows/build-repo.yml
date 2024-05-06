@@ -15,7 +15,7 @@ jobs:
 
             # TODO: Copy key to deploy
 
-            -   name: Copy deb
+            -   name: Build repo
                 run: |
                     ./repo/scripts/build-repo-in-docker
 

@@ -12,6 +12,8 @@ ExecStartPre=/usr/bin/firefish-prestart-hook
 ExecStart=/usr/bin/node /var/lib/firefish/live/packages/backend/built/index.js
 ExecReload=/bin/kill -SIGUSR1 $MAINPID
 TimeoutSec=15
+# To migration. If migrations are failed, extend this value.
+TimeoutStartSec=300
 Restart=on-failure
 StartLimitBurst=2
 

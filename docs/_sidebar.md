@@ -1,0 +1,6 @@
+- [About this document](/)
+- [Install Firefish](install-firefish.md)
+    * [Prepare Ubuntu machine](prepare-ubuntu-machine.md)
+    * [Prepare databases](prepare-databases.md)
+    * [Introduce reverse proxy](introduce-reverse-proxy.md)
+    * [Set-up installed server](set-up-installed-server.md)

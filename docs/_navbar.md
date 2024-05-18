@@ -1,0 +1,3 @@
+- Another Language
+  - [:us: English](/)
+  - [:jp: 日本語](/ja-jp/)

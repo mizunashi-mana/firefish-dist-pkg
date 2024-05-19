@@ -1,0 +1,6 @@
+- [このドキュメントについて](ja-jp/)
+- [Firefish のインストール](ja-jp/install-firefish.md)
+    * [Ubuntu マシンの用意](ja-jp/prepare-ubuntu-machine.md)
+    * [データベースの用意](ja-jp/prepare-databases.md)
+    * [リバースプロキシの導入](ja-jp/introduce-reverse-proxy.md)
+    * [インストール後の設定](ja-jp/set-up-installed-server.md)

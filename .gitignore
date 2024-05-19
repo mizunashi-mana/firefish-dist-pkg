@@ -5,3 +5,6 @@ VERSION.txt
 
 # build
 .stamp.*
+
+# for npm
+node_modules/

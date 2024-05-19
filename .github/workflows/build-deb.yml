@@ -98,7 +98,8 @@ jobs:
             -   name: Pull compose images
                 run: |
                     docker compose --file docker-compose.yml pull \
-                        postgres redis
+                        postgres \
+                        redis
 
             -   name: Up services and test
                 run: |
